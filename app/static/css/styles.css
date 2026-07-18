@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f5;
+}
+
+.contenedor {
+    width: 90%;
+    max-width: 700px;
+    padding: 40px;
+    text-align: center;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+h1 {
+    margin-bottom: 16px;
+    font-size: 42px;
+}
+
+p {
+    margin-bottom: 24px;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+button {
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+}
