@@ -214,7 +214,129 @@
                 </div>
 
                 <div class="panel-carga">
-                    <div class="panel-carga-icono">📤</div>
+    <form
+        class="formulario-carga"
+        method="POST"
+        enctype="multipart/form-data"
+        id="formulario-carga"
+    >
+        <div class="panel-carga-icono">📤</div>
+
+        <h3>Sube una imagen</h3>
+
+        <p>
+            Selecciona un residuo en formato JPG, JPEG o PNG.
+            Tamaño máximo: 5 MB.
+        </p>
+
+        <div
+            class="mensajes-formulario"
+            aria-live="polite"
+        >
+            {% with mensajes = get_flashed_messages(with_categories=true) %}
+                {% if mensajes %}
+                    {% for categoria, mensaje in mensajes %}
+                        <div class="mensaje mensaje-{{ categoria }}">
+                            {{ mensaje }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% if error_mensaje %}
+                <div class="mensaje mensaje-error">
+                    {{ error_mensaje }}
+                </div>
+            {% endif %}
+        </div>
+
+        <label
+            class="zona-carga"
+            for="imagen-residuo"
+            id="zona-carga"
+        >
+            <input
+                type="file"
+                name="imagen_residuo"
+                id="imagen-residuo"
+                accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+                hidden
+            >
+
+            <span class="zona-carga-icono">🖼️</span>
+
+            <strong>
+                Haz clic para seleccionar una imagen
+            </strong>
+
+            <small>
+                También puedes arrastrarla hasta esta zona
+            </small>
+        </label>
+
+        <div
+            class="vista-previa-contenedor"
+            id="vista-previa-contenedor"
+            hidden
+        >
+            <img
+                id="vista-previa"
+                class="vista-previa"
+                src=""
+                alt="Vista previa del residuo seleccionado"
+            >
+
+            <div class="datos-archivo">
+                <strong id="nombre-archivo"></strong>
+                <small id="tamano-archivo"></small>
+            </div>
+
+            <button
+                class="boton-eliminar"
+                id="boton-eliminar"
+                type="button"
+            >
+                Eliminar imagen
+            </button>
+        </div>
+
+        {% if imagen_subida %}
+            <div class="resultado-carga">
+                <span class="resultado-icono">✓</span>
+
+                <div>
+                    <strong>Imagen recibida por ReciBot</strong>
+
+                    <p>
+                        El archivo fue guardado correctamente.
+                    </p>
+                </div>
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='uploads/' + imagen_subida
+                    ) }}"
+                    alt="Imagen del residuo cargado"
+                >
+            </div>
+        {% endif %}
+
+        <button
+            class="boton boton-claro boton-enviar"
+            id="boton-enviar"
+            type="submit"
+            disabled
+        >
+            Cargar imagen
+        </button>
+
+        <small class="nota-clasificador">
+            En el siguiente módulo conectaremos esta imagen con el
+            modelo de inteligencia artificial.
+        </small>
+    </form>
+</div>
                     <h3>Sube una imagen</h3>
                     <p>JPG, JPEG o PNG. Tamaño máximo: 5 MB.</p>
 
@@ -312,5 +434,20 @@
         src="{{ url_for('static', filename='js/main.js') }}"
         defer
     ></script>
+
+    {% if desplazarse_clasificador %}
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const clasificador = document.querySelector("#clasificador");
+
+        if (clasificador) {
+            clasificador.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+    });
+</script>
+{% endif %}
 </body>
 </html>
