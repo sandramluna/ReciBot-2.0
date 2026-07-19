@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ReciBot 2.0</title>
+    <meta
+        name="description"
+        content="ReciBot 2.0: sistema inteligente para clasificar residuos sólidos mediante inteligencia artificial."
+    >
+
+    <title>ReciBot 2.0 | Inteligencia artificial para reciclar</title>
 
     <link
         rel="stylesheet"
@@ -13,17 +18,299 @@
 </head>
 
 <body>
-    <main class="contenedor">
-        <h1>ReciBot 2.0</h1>
+    <header class="encabezado">
+        <nav class="navegacion contenedor-ancho" aria-label="Navegación principal">
+            <a class="marca" href="{{ url_for('main.inicio') }}">
+                <span class="marca-icono" aria-hidden="true">♻</span>
 
-        <p>
-            Sistema inteligente para la clasificación de residuos sólidos
-            mediante inteligencia artificial.
-        </p>
+                <span class="marca-texto">
+                    <strong>ReciBot</strong>
+                    <small>2.0</small>
+                </span>
+            </a>
 
-        <button type="button">
-            Comenzar
-        </button>
+            <button
+                class="boton-menu"
+                type="button"
+                aria-label="Abrir menú de navegación"
+                aria-expanded="false"
+                aria-controls="menu-principal"
+            >
+                ☰
+            </button>
+
+            <ul class="menu-principal" id="menu-principal">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#funcionamiento">Cómo funciona</a></li>
+    <li><a href="#beneficios">Beneficios</a></li>
+    <li><a href="#proyecto">Proyecto</a></li>
+    <li class="opcion-clasificador-movil">
+        <a href="#clasificador">Clasificar residuo</a>
+    </li>
+</ul>
+
+            <a class="boton boton-navegacion" href="#clasificador">
+                Clasificar residuo
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="inicio">
+            <div class="hero-contenido contenedor-ancho">
+                <div class="hero-texto">
+                    <span class="etiqueta">
+                        Inteligencia artificial y educación ambiental
+                    </span>
+
+                    <h1>
+                        Clasifica residuos y aprende a disponerlos
+                        <span>correctamente</span>
+                    </h1>
+
+                    <p class="hero-descripcion">
+                        ReciBot 2.0 utiliza visión por computadora para identificar
+                        diferentes tipos de residuos y ofrecer recomendaciones que
+                        favorecen una separación responsable.
+                    </p>
+
+                    <div class="hero-acciones">
+                        <a class="boton boton-principal" href="#clasificador">
+                            Comenzar clasificación
+                        </a>
+
+                        <a class="boton boton-secundario" href="#funcionamiento">
+                            Conocer el proceso
+                        </a>
+                    </div>
+
+                    <div class="hero-indicadores" aria-label="Características principales">
+                        <div>
+                            <strong>5</strong>
+                            <span>Categorías iniciales</span>
+                        </div>
+
+                        <div>
+                            <strong>IA</strong>
+                            <span>Visión por computadora</span>
+                        </div>
+
+                        <div>
+                            <strong>24/7</strong>
+                            <span>Aprendizaje ambiental</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-visual" aria-label="Representación visual de ReciBot">
+                    <div class="orbita orbita-superior"></div>
+                    <div class="orbita orbita-inferior"></div>
+
+                    <div class="robot-tarjeta">
+                        <div class="robot-cabeza">
+                            <span class="robot-ojo"></span>
+                            <span class="robot-ojo"></span>
+                        </div>
+
+                        <div class="robot-cuerpo">
+                            <span>♻</span>
+                        </div>
+
+                        <p>Preparado para analizar</p>
+                    </div>
+
+                    <div class="mini-tarjeta mini-tarjeta-plastico">
+                        <span>🧴</span>
+                        <div>
+                            <strong>Plástico</strong>
+                            <small>Material reciclable</small>
+                        </div>
+                    </div>
+
+                    <div class="mini-tarjeta mini-tarjeta-organico">
+                        <span>🍃</span>
+                        <div>
+                            <strong>Orgánico</strong>
+                            <small>Residuo aprovechable</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion seccion-clara" id="funcionamiento">
+            <div class="contenedor-ancho">
+                <div class="titulo-seccion">
+                    <span>Proceso inteligente</span>
+                    <h2>¿Cómo funciona ReciBot 2.0?</h2>
+                    <p>
+                        El sistema guía al usuario en cuatro pasos sencillos,
+                        desde la captura de la imagen hasta la recomendación ambiental.
+                    </p>
+                </div>
+
+                <div class="rejilla-pasos">
+                    <article class="tarjeta-paso">
+                        <span class="numero-paso">01</span>
+                        <div class="icono-paso">📷</div>
+                        <h3>Captura o selecciona</h3>
+                        <p>
+                            Toma una fotografía del residuo o selecciona una imagen
+                            guardada en el dispositivo.
+                        </p>
+                    </article>
+
+                    <article class="tarjeta-paso">
+                        <span class="numero-paso">02</span>
+                        <div class="icono-paso">🧠</div>
+                        <h3>La IA analiza</h3>
+                        <p>
+                            El modelo procesa la imagen y compara sus características
+                            con las categorías aprendidas.
+                        </p>
+                    </article>
+
+                    <article class="tarjeta-paso">
+                        <span class="numero-paso">03</span>
+                        <div class="icono-paso">🔍</div>
+                        <h3>Obtén el resultado</h3>
+                        <p>
+                            ReciBot muestra la categoría identificada y el nivel de
+                            confianza de la predicción.
+                        </p>
+                    </article>
+
+                    <article class="tarjeta-paso">
+                        <span class="numero-paso">04</span>
+                        <div class="icono-paso">🌱</div>
+                        <h3>Aprende a disponerlo</h3>
+                        <p>
+                            Recibe una recomendación para separar y entregar
+                            correctamente el residuo.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion seccion-verde" id="clasificador">
+            <div class="contenedor-ancho clasificador-presentacion">
+                <div>
+                    <span class="etiqueta etiqueta-clara">Próximo módulo</span>
+
+                    <h2>Clasificador inteligente de residuos</h2>
+
+                    <p>
+                        Esta sección estará conectada con la cámara, la carga de
+                        imágenes y el modelo de inteligencia artificial de ReciBot.
+                    </p>
+
+                    <ul class="lista-verificacion">
+                        <li>Captura desde cámara o archivo.</li>
+                        <li>Validación del formato de imagen.</li>
+                        <li>Predicción con nivel de confianza.</li>
+                        <li>Recomendaciones ambientales.</li>
+                    </ul>
+                </div>
+
+                <div class="panel-carga">
+                    <div class="panel-carga-icono">📤</div>
+                    <h3>Sube una imagen</h3>
+                    <p>JPG, JPEG o PNG. Tamaño máximo: 5 MB.</p>
+
+                    <button class="boton boton-claro" type="button" disabled>
+                        Función en construcción
+                    </button>
+
+                    <small>
+                        En el siguiente módulo habilitaremos esta función.
+                    </small>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion seccion-clara" id="beneficios">
+            <div class="contenedor-ancho">
+                <div class="titulo-seccion">
+                    <span>Impacto del proyecto</span>
+                    <h2>Tecnología al servicio del ambiente</h2>
+                </div>
+
+                <div class="rejilla-beneficios">
+                    <article class="tarjeta-beneficio">
+                        <div class="icono-beneficio">♻️</div>
+                        <h3>Mejora la separación</h3>
+                        <p>
+                            Ayuda a identificar residuos y fortalece las prácticas
+                            de separación en la fuente.
+                        </p>
+                    </article>
+
+                    <article class="tarjeta-beneficio">
+                        <div class="icono-beneficio">🎓</div>
+                        <h3>Promueve el aprendizaje</h3>
+                        <p>
+                            Integra inteligencia artificial, programación y educación
+                            ambiental en una experiencia práctica.
+                        </p>
+                    </article>
+
+                    <article class="tarjeta-beneficio">
+                        <div class="icono-beneficio">📊</div>
+                        <h3>Genera información</h3>
+                        <p>
+                            Permitirá registrar clasificaciones y construir estadísticas
+                            sobre los residuos analizados.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion seccion-proyecto" id="proyecto">
+            <div class="contenedor-ancho proyecto-contenido">
+                <div>
+                    <span class="etiqueta">Proyecto de investigación y desarrollo</span>
+
+                    <h2>ReciBot 2.0</h2>
+
+                    <p>
+                        Es una solución educativa y tecnológica que combina desarrollo
+                        web, visión por computadora e inteligencia artificial para
+                        fortalecer la clasificación responsable de residuos sólidos.
+                    </p>
+                </div>
+
+                <div class="tecnologias">
+                    <span>Python</span>
+                    <span>Flask</span>
+                    <span>TensorFlow</span>
+                    <span>SQLite</span>
+                    <span>HTML</span>
+                    <span>CSS</span>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <footer class="pie-pagina">
+        <div class="contenedor-ancho pie-contenido">
+            <div>
+                <strong>ReciBot 2.0</strong>
+                <p>
+                    La inteligencia artificial al servicio del medio ambiente.
+                </p>
+            </div>
+
+            <p>
+                Proyecto educativo de investigación y desarrollo.
+            </p>
+        </div>
+    </footer>
+
+    <script
+        src="{{ url_for('static', filename='js/main.js') }}"
+        defer
+    ></script>
 </body>
 </html>
