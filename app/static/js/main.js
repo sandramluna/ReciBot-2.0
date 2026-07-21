@@ -24,8 +24,58 @@ const vistaPrevia = document.querySelector("#vista-previa");
 const nombreArchivo = document.querySelector("#nombre-archivo");
 const tamanoArchivo = document.querySelector("#tamano-archivo");
 const botonEliminar = document.querySelector("#boton-eliminar");
-const botonEnviar = document.querySelector("#boton-enviar");
+const botonEnviar = document.querySelector("#boton-cargar");
+const formularioCarga = document.querySelector("#formulario-carga");
+const textoBotonCargar = document.querySelector(
+    "#texto-boton-cargar"
+);
+const spinnerCarga = document.querySelector("#spinner-carga");
+const mensajeAnalizando = document.querySelector(
+    "#mensaje-analizando"
+);
 
+let formularioEnviado = false;
+if (inputImagen) {
+    inputImagen.addEventListener("change", () => {
+        procesarArchivo(inputImagen.files[0]);
+    });
+}
+if (formularioCarga) {
+    formularioCarga.addEventListener("submit", (evento) => {
+        if (!inputImagen || inputImagen.files.length === 0) {
+            evento.preventDefault();
+            mostrarError(
+                "Debes seleccionar una imagen antes de analizarla."
+            );
+            return;
+        }
+
+        if (formularioEnviado) {
+            evento.preventDefault();
+            return;
+        }
+
+        formularioEnviado = true;
+
+        if (botonEnviar) {
+            botonEnviar.disabled = true;
+        }
+
+        if (textoBotonCargar) {
+            textoBotonCargar.textContent = "Analizando...";
+        }
+
+        if (spinnerCarga) {
+            spinnerCarga.classList.add("activo");
+            spinnerCarga.setAttribute("aria-hidden", "false");
+        }
+
+        if (mensajeAnalizando) {
+    mensajeAnalizando.hidden = false;
+    mensajeAnalizando.classList.add("activo");
+}
+    });
+}
 const extensionesPermitidas = ["image/jpeg", "image/png"];
 const tamanoMaximo = 5 * 1024 * 1024;
 
@@ -65,6 +115,21 @@ function limpiarSeleccion() {
     if (zonaCarga) {
         zonaCarga.classList.remove("archivo-arrastrado");
     }
+    formularioEnviado = false;
+
+if (textoBotonCargar) {
+    textoBotonCargar.textContent = "Cargar imagen";
+}
+
+if (spinnerCarga) {
+    spinnerCarga.classList.remove("activo");
+    spinnerCarga.setAttribute("aria-hidden", "true");
+}
+
+if (mensajeAnalizando) {
+    mensajeAnalizando.classList.remove("activo");
+    mensajeAnalizando.hidden = true;
+}
 }
 
 
@@ -214,6 +279,25 @@ if (botonAnalizarOtra) {
         if (inputArchivo) {
             inputArchivo.value = "";
         }
+        formularioEnviado = false;
+
+if (botonEnviar) {
+    botonEnviar.disabled = true;
+}
+
+if (textoBotonCargar) {
+    textoBotonCargar.textContent = "Cargar imagen";
+}
+
+if (spinnerCarga) {
+    spinnerCarga.classList.remove("activo");
+    spinnerCarga.setAttribute("aria-hidden", "true");
+}
+
+if (mensajeAnalizando) {
+    mensajeAnalizando.classList.remove("activo");
+    mensajeAnalizando.hidden = true;
+}
 
         if (imagenPrevia) {
             imagenPrevia.removeAttribute("src");

@@ -526,19 +526,37 @@
 </section>
 {% endif %}
         <button
-            class="boton boton-claro boton-enviar"
-            id="boton-enviar"
-            type="submit"
-            disabled
-        >
-            Cargar imagen
-        </button>
+    type="submit"
+    class="boton boton-principal"
+    id="boton-cargar"
+>
+    <span id="texto-boton-cargar">
+        Cargar imagen
+    </span>
+
+    <span
+        class="spinner-carga"
+        id="spinner-carga"
+        aria-hidden="true"
+    ></span>
+</button>
+
+<p
+    class="mensaje-analizando"
+    id="mensaje-analizando"
+    role="status"
+    aria-live="polite"
+    hidden 
+>
+    La inteligencia artificial está analizando la imagen...
+</p>
 
         <small class="nota-clasificador">
             ReciBot analizará la imagen y mostrará la categoría,
     el nivel de confianza y una recomendación ambiental.
         </small>
-    </form>
+     
+</form>
 </div>
                    
                 </div>
