@@ -155,3 +155,102 @@ if (zonaCarga && inputImagen) {
         procesarArchivo(archivo);
     });
 }
+const botonAnalizarOtra = document.getElementById(
+    "boton-analizar-otra"
+);
+
+if (botonAnalizarOtra) {
+    botonAnalizarOtra.addEventListener("click", () => {
+        const resultado = document.getElementById(
+            "resultado-clasificacion"
+        );
+
+        const clasificador = document.getElementById(
+            "clasificador"
+        );
+
+        const inputArchivo = document.querySelector(
+            'input[name="imagen_residuo"]'
+        );
+
+        const formulario = inputArchivo?.closest("form");
+
+        const imagenCargadaServidor = document.getElementById(
+            "imagen-cargada-servidor"
+        );
+
+        const mensajesFlash = document.getElementById(
+            "mensajes-flash"
+        );
+
+        const vistaPrevia = document.querySelector(
+            "#vista-previa, .vista-previa, .preview-imagen"
+        );
+
+        const imagenPrevia = document.querySelector(
+            "#imagen-preview, .imagen-preview, .preview-imagen img"
+        );
+
+        const nombreArchivo = document.querySelector(
+            "#nombre-archivo, .nombre-archivo"
+        );
+
+        if (resultado) {
+            resultado.remove();
+        }
+
+        if (imagenCargadaServidor) {
+            imagenCargadaServidor.remove();
+        }
+
+        if (mensajesFlash) {
+            mensajesFlash.remove();
+        }
+
+        if (formulario) {
+            formulario.reset();
+        }
+
+        if (inputArchivo) {
+            inputArchivo.value = "";
+        }
+
+        if (imagenPrevia) {
+            imagenPrevia.removeAttribute("src");
+            imagenPrevia.style.display = "none";
+        }
+
+        if (vistaPrevia) {
+            vistaPrevia.classList.remove(
+                "activa",
+                "visible",
+                "con-imagen"
+            );
+
+            vistaPrevia.style.display = "none";
+        }
+
+        if (nombreArchivo) {
+            nombreArchivo.textContent = "";
+        }
+
+        document
+            .querySelectorAll(
+                ".mensaje-archivo, .upload-success"
+            )
+            .forEach((elemento) => {
+                elemento.remove();
+            });
+
+        if (clasificador) {
+            clasificador.scrollIntoView({
+                behavior: "auto",
+                block: "start",
+            });
+        }
+
+        window.setTimeout(() => {
+            inputArchivo?.focus();
+        }, 600);
+    });
+}

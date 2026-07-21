@@ -23,7 +23,7 @@
 }
 
 html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
 }
 
 body {
@@ -1168,5 +1168,354 @@ img {
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+    }
+}
+.resultado-clasificacion {
+    --color-principal: #2f8f4e;
+    --color-secundario: #eaf7ee;
+    width: 100%;
+    max-width: 680px;
+    margin: 2rem auto 0;
+    padding: 1.75rem;
+    background: #ffffff;
+    border: 1px solid #dce9df;
+    border-radius: 24px;
+    box-shadow: 0 18px 45px rgba(20, 79, 43, 0.16);
+    animation: aparecerResultado 0.45s ease-out;
+}
+
+.resultado-cardboard {
+    --color-principal: #9a6b3f;
+    --color-secundario: #f7eee5;
+}
+
+.resultado-glass {
+    --color-principal: #368b8e;
+    --color-secundario: #e7f5f5;
+}
+
+.resultado-metal {
+    --color-principal: #66727a;
+    --color-secundario: #edf1f3;
+}
+
+.resultado-organic {
+    --color-principal: #388e3c;
+    --color-secundario: #e9f7e9;
+}
+
+.resultado-plastic {
+    --color-principal: #2f76b7;
+    --color-secundario: #e9f2fb;
+}
+
+.resultado-cabecera {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+}
+
+.resultado-icono-principal {
+    display: grid;
+    place-items: center;
+    width: 68px;
+    height: 68px;
+    font-size: 2.2rem;
+    background: var(--color-secundario);
+    border-radius: 20px;
+}
+
+.resultado-titulo p {
+    margin: 0 0 0.25rem;
+    color: #6b756f;
+    font-size: 0.88rem;
+}
+
+.resultado-titulo h3 {
+    margin: 0;
+    color: var(--color-principal);
+    font-size: 2rem;
+}
+
+.indicador-confianza {
+    padding: 0.55rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.confianza-alta {
+    color: #176b35;
+    background: #dff4e6;
+}
+
+.confianza-media {
+    color: #8a5c00;
+    background: #fff1c9;
+}
+
+.confianza-baja {
+    color: #9b2f2f;
+    background: #fde1e1;
+}
+
+.resultado-descripcion {
+    margin-top: 1.25rem;
+    color: #526059;
+    line-height: 1.6;
+}
+
+.resultado-descripcion p {
+    margin: 0;
+}
+
+.resultado-bloque-confianza {
+    margin-top: 1.5rem;
+}
+
+.resultado-confianza {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: #35443b;
+}
+
+.resultado-confianza strong {
+    color: var(--color-principal);
+}
+
+.barra-confianza,
+.probabilidad-barra {
+    width: 100%;
+    overflow: hidden;
+    background: #e7ede9;
+    border-radius: 999px;
+}
+
+.barra-confianza {
+    height: 13px;
+    margin-top: 0.65rem;
+}
+
+.barra-confianza-progreso,
+.probabilidad-progreso {
+    width: var(--porcentaje);
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        var(--color-principal),
+        #62b879
+    );
+    border-radius: inherit;
+    animation: crecerBarra 0.9s ease-out;
+}
+
+.resultado-contenedor {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f8faf8;
+    border: 1px solid #e1e9e3;
+    border-radius: 16px;
+}
+
+.contenedor-icono {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    font-size: 1.5rem;
+}
+
+.contenedor-blanco {
+    background: #ffffff;
+    border: 1px solid #d6ded8;
+}
+
+.contenedor-verde {
+    background: #e5f5e7;
+}
+
+.resultado-contenedor span {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: #6b756f;
+    font-size: 0.82rem;
+}
+
+.resultado-contenedor strong {
+    color: #293a30;
+    font-size: 1.05rem;
+}
+
+.resultado-recomendacion {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding: 1.15rem;
+    color: #293a30;
+    background: var(--color-secundario);
+    border-left: 5px solid var(--color-principal);
+    border-radius: 16px;
+}
+
+.recomendacion-icono {
+    font-size: 1.45rem;
+}
+
+.resultado-recomendacion h4 {
+    margin: 0 0 0.45rem;
+    color: var(--color-principal);
+}
+
+.resultado-recomendacion p {
+    margin: 0;
+    color: #394a40;
+    line-height: 1.6;
+}
+
+.resultado-detalles {
+    margin-top: 1.5rem;
+}
+
+.resultado-detalles summary {
+    color: var(--color-principal);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.probabilidades-lista {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.2rem;
+}
+
+.probabilidad-encabezado {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+    color: #3b4940;
+    font-size: 0.9rem;
+}
+
+.probabilidad-barra {
+    height: 8px;
+}
+
+.boton-analizar-otra {
+    display: inline-flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1.6rem;
+    padding: 0.9rem 1.2rem;
+    color: #ffffff;
+    background: var(--color-principal);
+    border-radius: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.boton-analizar-otra:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+}
+
+@keyframes aparecerResultado {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes crecerBarra {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: var(--porcentaje);
+    }
+}
+
+@media (max-width: 650px) {
+    .resultado-clasificacion {
+        padding: 1.25rem;
+        border-radius: 18px;
+    }
+
+    .resultado-cabecera {
+        grid-template-columns: auto 1fr;
+    }
+
+    .indicador-confianza {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+
+    .resultado-titulo h3 {
+        font-size: 1.6rem;
+    }
+
+    .resultado-icono-principal {
+        width: 58px;
+        height: 58px;
+        font-size: 1.9rem;
+    }
+}
+#imagen-cargada-servidor {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 16px;
+}
+
+#imagen-cargada-servidor img {
+    width: 96px;
+    height: 120px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.imagen-cargada-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.imagen-cargada-info p {
+    margin: 0.25rem 0 0;
+}
+
+@media (max-width: 600px) {
+    #imagen-cargada-servidor {
+        align-items: flex-start;
+    }
+
+    #imagen-cargada-servidor img {
+        width: 78px;
+        height: 100px;
     }
 }

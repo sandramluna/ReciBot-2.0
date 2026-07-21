@@ -214,12 +214,13 @@
                 </div>
 
                 <div class="panel-carga">
-    <form
-        class="formulario-carga"
-        method="POST"
-        enctype="multipart/form-data"
-        id="formulario-carga"
-    >
+  <form
+    class="formulario-carga"
+    method="POST"
+    enctype="multipart/form-data"
+    id="formulario-carga"
+    action="{{ url_for('main.inicio') }}#clasificador"
+>
         <div class="panel-carga-icono">📤</div>
 
         <h3>Sube una imagen</h3>
@@ -233,21 +234,26 @@
             class="mensajes-formulario"
             aria-live="polite"
         >
-            {% with mensajes = get_flashed_messages(with_categories=true) %}
-                {% if mensajes %}
-                    {% for categoria, mensaje in mensajes %}
-                        <div class="mensaje mensaje-{{ categoria }}">
-                            {{ mensaje }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-
-            {% if error_mensaje %}
-                <div class="mensaje mensaje-error">
-                    {{ error_mensaje }}
+          {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+        <div
+            class="mensajes-flash"
+            id="mensajes-flash"
+        >
+            {% for categoria, mensaje in mensajes %}
+                <div class="mensaje mensaje-{{ categoria }}">
+                    {{ mensaje }}
                 </div>
-            {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+{% if error_mensaje %}
+    <div class="mensaje mensaje-error">
+        {{ error_mensaje }}
+    </div>
+{% endif %}
         </div>
 
         <label
@@ -300,28 +306,225 @@
             </button>
         </div>
 
-        {% if imagen_subida %}
-            <div class="resultado-carga">
-                <span class="resultado-icono">✓</span>
+       {% if imagen_subida %}
+<div
+    class="imagen-cargada"
+    id="imagen-cargada-servidor"
+>
+    <div class="imagen-cargada-info">
+        <span>✓</span>
 
-                <div>
-                    <strong>Imagen recibida por ReciBot</strong>
+        <div>
+            <strong>Imagen recibida por ReciBot</strong>
+            <p>El archivo fue guardado correctamente.</p>
+        </div>
+    </div>
 
-                    <p>
-                        El archivo fue guardado correctamente.
-                    </p>
+    <img
+        src="{{ url_for(
+            'static',
+            filename='uploads/' ~ imagen_subida
+        ) }}"
+        alt="Imagen cargada para clasificar"
+    >
+</div>
+{% endif %}
+{% if resultado %}
+{% set datos_categoria = {
+    "cardboard": {
+        "icono": "📦",
+        "nombre": "Cartón",
+        "contenedor": "Blanco",
+        "color": "blanco",
+        "descripcion": "Material reciclable elaborado principalmente con fibras de papel."
+    },
+    "glass": {
+        "icono": "🍾",
+        "nombre": "Vidrio",
+        "contenedor": "Blanco",
+        "color": "blanco",
+        "descripcion": "Material reciclable que puede aprovecharse varias veces si está limpio."
+    },
+    "metal": {
+        "icono": "🥫",
+        "nombre": "Metal",
+        "contenedor": "Blanco",
+        "color": "blanco",
+        "descripcion": "Las latas y envases metálicos limpios pueden reincorporarse al ciclo productivo."
+    },
+    "organic": {
+        "icono": "🍌",
+        "nombre": "Orgánico",
+        "contenedor": "Verde",
+        "color": "verde",
+        "descripcion": "Residuo biodegradable que puede aprovecharse para producir compost."
+    },
+    "plastic": {
+        "icono": "🧴",
+        "nombre": "Plástico",
+        "contenedor": "Blanco",
+        "color": "blanco",
+        "descripcion": "Los envases plásticos aprovechables deben entregarse vacíos, limpios y secos."
+    }
+} %}
+
+{% set ficha = datos_categoria.get(
+    resultado.etiqueta,
+    {
+        "icono": "♻️",
+        "nombre": resultado.categoria,
+        "contenedor": "Consulta local",
+        "color": "blanco",
+        "descripcion": "Consulta las normas locales para disponer correctamente este residuo."
+    }
+) %}
+
+{% if resultado.confianza_porcentaje >= 80 %}
+    {% set nivel_confianza = "Alta" %}
+    {% set clase_confianza = "confianza-alta" %}
+{% elif resultado.confianza_porcentaje >= 60 %}
+    {% set nivel_confianza = "Media" %}
+    {% set clase_confianza = "confianza-media" %}
+{% else %}
+    {% set nivel_confianza = "Baja" %}
+    {% set clase_confianza = "confianza-baja" %}
+{% endif %}
+
+<section
+    class="resultado-clasificacion resultado-{{ resultado.etiqueta }}"
+    id="resultado-clasificacion"
+>
+    <header class="resultado-cabecera">
+        <div class="resultado-icono-principal">
+            {{ ficha.icono }}
+        </div>
+
+        <div class="resultado-titulo">
+            <p>Resultado del análisis</p>
+
+            <h3>
+                {{ ficha.nombre }}
+            </h3>
+        </div>
+
+        <span class="indicador-confianza {{ clase_confianza }}">
+            Confianza {{ nivel_confianza }}
+        </span>
+    </header>
+
+    <div class="resultado-descripcion">
+        <p>
+            {{ ficha.descripcion }}
+        </p>
+    </div>
+
+    <div class="resultado-bloque-confianza">
+        <div class="resultado-confianza">
+            <span>Confianza de la predicción</span>
+
+            <strong>
+                {{ resultado.confianza_porcentaje }}%
+            </strong>
+        </div>
+
+        <div
+            class="barra-confianza"
+            role="progressbar"
+            aria-valuenow="{{ resultado.confianza_porcentaje }}"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-label="Confianza de la predicción"
+        >
+            <div
+                class="barra-confianza-progreso"
+                style="--porcentaje: {{ resultado.confianza_porcentaje }}%;"
+            ></div>
+        </div>
+    </div>
+
+    <div class="resultado-contenedor">
+        <div class="contenedor-icono contenedor-{{ ficha.color }}">
+            {% if ficha.color == "verde" %}
+                🟢
+            {% else %}
+                ⚪
+            {% endif %}
+        </div>
+
+        <div>
+            <span>Contenedor recomendado</span>
+
+            <strong>
+                {{ ficha.contenedor }}
+            </strong>
+        </div>
+    </div>
+
+    <div class="resultado-recomendacion">
+        <div class="recomendacion-icono">
+            🌱
+        </div>
+
+        <div>
+            <h4>¿Qué debes hacer?</h4>
+
+            <p>
+                {{ resultado.recomendacion }}
+            </p>
+        </div>
+    </div>
+
+    <details class="resultado-detalles">
+        <summary>
+            Ver probabilidades por categoría
+        </summary>
+
+        <div class="probabilidades-lista">
+            {% for clase, porcentaje
+                in resultado.probabilidades.items() %}
+
+                {% set nombres_clases = {
+                    "cardboard": "Cartón",
+                    "glass": "Vidrio",
+                    "metal": "Metal",
+                    "organic": "Orgánico",
+                    "plastic": "Plástico"
+                } %}
+
+                <div class="probabilidad-item">
+                    <div class="probabilidad-encabezado">
+                        <span>
+                            {{ nombres_clases.get(
+                                clase,
+                                clase | capitalize
+                            ) }}
+                        </span>
+
+                        <strong>
+                            {{ porcentaje }}%
+                        </strong>
+                    </div>
+
+                    <div class="probabilidad-barra">
+                        <div
+                            class="probabilidad-progreso"
+                            style="--porcentaje: {{ porcentaje }}%;"
+                        ></div>
+                    </div>
                 </div>
+            {% endfor %}
+        </div>
+    </details>
 
-                <img
-                    src="{{ url_for(
-                        'static',
-                        filename='uploads/' + imagen_subida
-                    ) }}"
-                    alt="Imagen del residuo cargado"
-                >
-            </div>
-        {% endif %}
-
+    <button
+    type="button"
+    class="boton-analizar-otra"
+    id="boton-analizar-otra"
+>
+    Analizar otra imagen
+</button>
+</section>
+{% endif %}
         <button
             class="boton boton-claro boton-enviar"
             id="boton-enviar"
@@ -332,21 +535,12 @@
         </button>
 
         <small class="nota-clasificador">
-            En el siguiente módulo conectaremos esta imagen con el
-            modelo de inteligencia artificial.
+            ReciBot analizará la imagen y mostrará la categoría,
+    el nivel de confianza y una recomendación ambiental.
         </small>
     </form>
 </div>
-                    <h3>Sube una imagen</h3>
-                    <p>JPG, JPEG o PNG. Tamaño máximo: 5 MB.</p>
-
-                    <button class="boton boton-claro" type="button" disabled>
-                        Función en construcción
-                    </button>
-
-                    <small>
-                        En el siguiente módulo habilitaremos esta función.
-                    </small>
+                   
                 </div>
             </div>
         </section>
@@ -442,7 +636,7 @@
 
         if (clasificador) {
             clasificador.scrollIntoView({
-                behavior: "smooth",
+                behavior: "auto",
                 block: "start"
             });
         }

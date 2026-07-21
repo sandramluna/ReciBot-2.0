@@ -216,3 +216,29 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# Imágenes cargadas temporalmente por los usuarios
+app/static/uploads/*
+!app/static/uploads/.gitkeep
+
+# Entorno virtual
+.venv/
+
+# Dataset
+dataset/
+
+# Modelos y resultados generados durante el entrenamiento
+model/training/*.keras
+model/training/*.h5
+model/training/*.json
+model/training/*.png
+model/training/*.csv
+model/training/*.txt
+model/training/checkpoints/
+
+# Archivos temporales
+*.pyc
+__pycache__/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
