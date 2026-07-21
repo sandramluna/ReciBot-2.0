@@ -255,7 +255,15 @@
     </div>
 {% endif %}
         </div>
-
+<div class="acciones-camara">
+    <button
+        type="button"
+        class="boton boton-secundario"
+        id="boton-abrir-camara"
+    >
+        📷 Usar cámara
+    </button>
+</div>
         <label
             class="zona-carga"
             for="imagen-residuo"
@@ -327,6 +335,53 @@
         ) }}"
         alt="Imagen cargada para clasificar"
     >
+</div>
+<div
+    class="modal-camara"
+    id="modal-camara"
+    hidden
+>
+    <div class="modal-camara-contenido">
+        <button
+            type="button"
+            class="boton-cerrar-camara"
+            id="boton-cerrar-camara"
+            aria-label="Cerrar cámara"
+        >
+            ×
+        </button>
+
+        <h3>Capturar residuo</h3>
+
+        <video
+            id="video-camara"
+            autoplay
+            playsinline
+        ></video>
+
+        <canvas
+            id="canvas-camara"
+            hidden
+        ></canvas>
+
+        <div class="controles-camara">
+            <button
+                type="button"
+                class="boton boton-principal"
+                id="boton-capturar-foto"
+            >
+                Tomar fotografía
+            </button>
+
+            <button
+                type="button"
+                class="boton boton-secundario"
+                id="boton-cancelar-camara"
+            >
+                Cancelar
+            </button>
+        </div>
+    </div>
 </div>
 {% endif %}
 {% if resultado %}
@@ -557,6 +612,57 @@
         </small>
      
 </form>
+<div
+    class="modal-camara"
+    id="modal-camara"
+    hidden
+>
+    <div class="modal-camara-contenido">
+
+        <button
+            type="button"
+            class="boton-cerrar-camara"
+            id="boton-cerrar-camara"
+            aria-label="Cerrar cámara"
+        >
+            ×
+        </button>
+
+        <h3>Capturar residuo</h3>
+
+        <video
+            id="video-camara"
+            autoplay
+            playsinline
+        ></video>
+
+        <canvas
+            id="canvas-camara"
+            hidden
+        ></canvas>
+
+        <div class="controles-camara">
+
+            <button
+                type="button"
+                class="boton boton-principal"
+                id="boton-capturar-foto"
+            >
+                📷 Tomar fotografía
+            </button>
+
+            <button
+                type="button"
+                class="boton boton-secundario"
+                id="boton-cancelar-camara"
+            >
+                Cancelar
+            </button>
+
+        </div>
+
+    </div>
+</div>
 </div>
                    
                 </div>

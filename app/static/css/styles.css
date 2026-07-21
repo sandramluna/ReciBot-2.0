@@ -1570,3 +1570,77 @@ img {
         transform: rotate(360deg);
     }
 }
+/* =========================================
+   SPRINT 7.2 - CÁMARA DEL DISPOSITIVO
+========================================= */
+
+.acciones-camara {
+    margin-top: 14px;
+    text-align: center;
+}
+
+.modal-camara {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.72);
+}
+
+.modal-camara[hidden] {
+    display: none;
+}
+
+.modal-camara-contenido {
+    position: relative;
+    width: min(100%, 680px);
+    padding: 24px;
+    border-radius: 18px;
+    background: #ffffff;
+    color: #1f2937;
+    text-align: center;
+}
+
+.boton-cerrar-camara {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    border: none;
+    background: transparent;
+    font-size: 32px;
+    cursor: pointer;
+}
+
+#video-camara {
+    width: 100%;
+    max-height: 480px;
+    margin-top: 16px;
+    border-radius: 14px;
+    background: #111827;
+    object-fit: cover;
+}
+
+.controles-camara {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+    .modal-camara-contenido {
+        padding: 18px;
+    }
+
+    .controles-camara {
+        flex-direction: column;
+    }
+
+    .controles-camara .boton {
+        width: 100%;
+    }
+}

@@ -33,7 +33,23 @@ const spinnerCarga = document.querySelector("#spinner-carga");
 const mensajeAnalizando = document.querySelector(
     "#mensaje-analizando"
 );
+const botonAbrirCamara = document.getElementById(
+    "boton-abrir-camara"
+);
+const modalCamara = document.getElementById("modal-camara");
+const botonCerrarCamara = document.getElementById(
+    "boton-cerrar-camara"
+);
+const botonCancelarCamara = document.getElementById(
+    "boton-cancelar-camara"
+);
+const botonCapturarFoto = document.getElementById(
+    "boton-capturar-foto"
+);
+const videoCamara = document.getElementById("video-camara");
+const canvasCamara = document.getElementById("canvas-camara");
 
+let flujoCamara = null;
 let formularioEnviado = false;
 if (inputImagen) {
     inputImagen.addEventListener("change", () => {
@@ -220,6 +236,112 @@ if (zonaCarga && inputImagen) {
         procesarArchivo(archivo);
     });
 }
+async function abrirCamara() {
+    if (!navigator.mediaDevices?.getUserMedia) {
+        mostrarError(
+            "Este navegador no permite acceder a la cámara."
+        );
+        return;
+    }
+
+    try {
+        flujoCamara = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: {
+                    ideal: "environment",
+                },
+            },
+            audio: false,
+        });
+
+        videoCamara.srcObject = flujoCamara;
+        modalCamara.hidden = false;
+        document.body.style.overflow = "hidden";
+    } catch (error) {
+        console.error("Error al abrir la cámara:", error);
+
+        mostrarError(
+            "No fue posible acceder a la cámara. Verifica los permisos del navegador."
+        );
+    }
+}
+
+function cerrarCamara() {
+    if (flujoCamara) {
+        flujoCamara.getTracks().forEach((pista) => {
+            pista.stop();
+        });
+
+        flujoCamara = null;
+    }
+
+    if (videoCamara) {
+        videoCamara.srcObject = null;
+    }
+
+    if (modalCamara) {
+        modalCamara.hidden = true;
+    }
+
+    document.body.style.overflow = "";
+}
+
+function capturarFoto() {
+    if (!videoCamara || !canvasCamara || !inputImagen) {
+        return;
+    }
+
+    const ancho = videoCamara.videoWidth;
+    const alto = videoCamara.videoHeight;
+
+    if (!ancho || !alto) {
+        mostrarError(
+            "La cámara todavía no está lista. Espera un momento."
+        );
+        return;
+    }
+
+    canvasCamara.width = ancho;
+    canvasCamara.height = alto;
+
+    const contexto = canvasCamara.getContext("2d");
+
+    contexto.drawImage(
+        videoCamara,
+        0,
+        0,
+        ancho,
+        alto
+    );
+
+    canvasCamara.toBlob(
+        (blob) => {
+            if (!blob) {
+                mostrarError(
+                    "No fue posible capturar la fotografía."
+                );
+                return;
+            }
+
+            const archivo = new File(
+                [blob],
+                `recibot-camara-${Date.now()}.jpg`,
+                {
+                    type: "image/jpeg",
+                }
+            );
+
+            const transferencia = new DataTransfer();
+            transferencia.items.add(archivo);
+            inputImagen.files = transferencia.files;
+
+            procesarArchivo(archivo);
+            cerrarCamara();
+        },
+        "image/jpeg",
+        0.9
+    );
+}
 const botonAnalizarOtra = document.getElementById(
     "boton-analizar-otra"
 );
@@ -336,5 +458,40 @@ if (mensajeAnalizando) {
         window.setTimeout(() => {
             inputArchivo?.focus();
         }, 600);
+    });
+}
+if (botonAbrirCamara) {
+    botonAbrirCamara.addEventListener(
+        "click",
+        abrirCamara
+    );
+}
+
+if (botonCapturarFoto) {
+    botonCapturarFoto.addEventListener(
+        "click",
+        capturarFoto
+    );
+}
+
+if (botonCerrarCamara) {
+    botonCerrarCamara.addEventListener(
+        "click",
+        cerrarCamara
+    );
+}
+
+if (botonCancelarCamara) {
+    botonCancelarCamara.addEventListener(
+        "click",
+        cerrarCamara
+    );
+}
+
+if (modalCamara) {
+    modalCamara.addEventListener("click", (evento) => {
+        if (evento.target === modalCamara) {
+            cerrarCamara();
+        }
     });
 }
