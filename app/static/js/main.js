@@ -51,6 +51,36 @@ const canvasCamara = document.getElementById("canvas-camara");
 
 let flujoCamara = null;
 let formularioEnviado = false;
+const pestanasCentro = document.querySelectorAll(".pestana-centro");
+const panelesCentro = document.querySelectorAll(".panel-centro");
+
+pestanasCentro.forEach((pestana) => {
+    pestana.addEventListener("click", () => {
+        const nombrePestana = pestana.dataset.pestana;
+
+        pestanasCentro.forEach((elemento) => {
+            elemento.classList.remove("activa");
+            elemento.setAttribute("aria-selected", "false");
+        });
+
+        panelesCentro.forEach((panel) => {
+            panel.classList.remove("activo");
+            panel.hidden = true;
+        });
+
+        pestana.classList.add("activa");
+        pestana.setAttribute("aria-selected", "true");
+
+        const panelActivo = document.querySelector(
+            `[data-panel="${nombrePestana}"]`
+        );
+
+        if (panelActivo) {
+            panelActivo.hidden = false;
+            panelActivo.classList.add("activo");
+        }
+    });
+});
 if (inputImagen) {
     inputImagen.addEventListener("change", () => {
         procesarArchivo(inputImagen.files[0]);
@@ -67,11 +97,24 @@ if (formularioCarga) {
         }
 
         if (formularioEnviado) {
-            evento.preventDefault();
-            return;
-        }
+    evento.preventDefault();
+    return;
+}
 
-        formularioEnviado = true;
+const archivoSeleccionado = inputImagen.files[0];
+
+const origenImagen = archivoSeleccionado.name.startsWith(
+    "recibot-camara-"
+)
+    ? "Cámara"
+    : "Archivo";
+
+sessionStorage.setItem(
+    "recibotOrigenPendiente",
+    origenImagen
+);
+
+formularioEnviado = true;
 
         if (botonEnviar) {
             botonEnviar.disabled = true;

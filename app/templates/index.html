@@ -44,6 +44,10 @@
     <li><a href="#funcionamiento">Cómo funciona</a></li>
     <li><a href="#beneficios">Beneficios</a></li>
     <li><a href="#proyecto">Proyecto</a></li>
+    <li><a href="#centro-inteligencia">
+    Centro de Inteligencia
+</a></li>
+
     <li class="opcion-clasificador-movil">
         <a href="#clasificador">Clasificar residuo</a>
     </li>
@@ -137,7 +141,6 @@
                 </div>
             </div>
         </section>
-
         <section class="seccion seccion-clara" id="funcionamiento">
             <div class="contenedor-ancho">
                 <div class="titulo-seccion">
@@ -448,6 +451,10 @@
 <section
     class="resultado-clasificacion resultado-{{ resultado.etiqueta }}"
     id="resultado-clasificacion"
+    data-categoria="{{ ficha.nombre }}"
+    data-confianza="{{ resultado.confianza_porcentaje }}"
+    data-contenedor="{{ ficha.contenedor }}"
+    data-recomendacion="{{ resultado.recomendacion | e }}"
 >
     <header class="resultado-cabecera">
         <div class="resultado-icono-principal">
@@ -668,6 +675,123 @@
                 </div>
             </div>
         </section>
+<section class="seccion centro-inteligencia" id="centro-inteligencia">
+    <div class="contenedor-ancho">
+        <div class="encabezado-seccion">
+            <span class="etiqueta-seccion">
+                Nuevo módulo
+            </span>
+
+            <h2>Centro de Inteligencia ReciBot</h2>
+
+            <p>
+                Consulta el historial de clasificaciones, analiza estadísticas
+                y accede a herramientas inteligentes para aprender a reciclar mejor.
+            </p>
+        </div>
+
+        <div class="pestanas-centro" role="tablist">
+            <button
+                type="button"
+                class="pestana-centro activa"
+                id="pestana-historial"
+                data-pestana="historial"
+                role="tab"
+                aria-selected="true"
+            >
+                📋 Historial
+            </button>
+
+            <button
+                type="button"
+                class="pestana-centro"
+                id="pestana-estadisticas"
+                data-pestana="estadisticas"
+                role="tab"
+                aria-selected="false"
+            >
+                📊 Estadísticas
+            </button>
+
+            <button
+                type="button"
+                class="pestana-centro"
+                id="pestana-asistente"
+                data-pestana="asistente"
+                role="tab"
+                aria-selected="false"
+            >
+                🤖 Asistente
+            </button>
+        </div>
+
+        <div class="paneles-centro">
+           <div
+    id="contenedor-historial"
+    class="contenedor-historial"
+>
+
+    <div
+        id="estado-vacio-historial"
+        class="estado-vacio"
+    >
+
+        <span class="estado-vacio-icono">
+            📋
+        </span>
+
+        <h3>
+            Aún no hay clasificaciones guardadas
+        </h3>
+
+        <p>
+            Cuando analices residuos,
+            aparecerán aquí con su fecha,
+            categoría,
+            confianza y contenedor recomendado.
+        </p>
+
+    </div>
+
+</div>
+                
+
+            <div
+                class="panel-centro"
+                id="panel-estadisticas"
+                data-panel="estadisticas"
+                role="tabpanel"
+                hidden
+            >
+                <div class="estado-vacio">
+                    <span class="estado-vacio-icono">📊</span>
+                    <h3>Las estadísticas estarán disponibles próximamente</h3>
+                    <p>
+                        Aquí podrás consultar los residuos más clasificados
+                        y el promedio de confianza del modelo.
+                    </p>
+                </div>
+            </div>
+
+            <div
+                class="panel-centro"
+                id="panel-asistente"
+                data-panel="asistente"
+                role="tabpanel"
+                hidden
+            >
+                <div class="estado-vacio">
+                    <span class="estado-vacio-icono">🤖</span>
+                    <h3>El asistente inteligente llegará en una próxima versión</h3>
+                    <p>
+                        Podrás hacer preguntas relacionadas con reciclaje,
+                        separación de residuos y cuidado ambiental.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
         <section class="seccion seccion-clara" id="beneficios">
             <div class="contenedor-ancho">
@@ -747,7 +871,10 @@
             </p>
         </div>
     </footer>
-
+<script
+    src="{{ url_for('static', filename='js/history.js') }}"
+    defer
+></script>
     <script
         src="{{ url_for('static', filename='js/main.js') }}"
         defer
