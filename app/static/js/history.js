@@ -44,23 +44,42 @@ function registrarResultadoActual() {
             "recibotOrigenPendiente"
         )
     );
-    agregarClasificacion({
+    
+const categoria = resultado.dataset.categoria;
+const confianza = resultado.dataset.confianza;
+const contenedor = resultado.dataset.contenedor;
+const recomendacion =
+    resultado.dataset.recomendacion;
 
-    categoria: resultado.dataset.categoria,
-
-    confianza: resultado.dataset.confianza,
-
-    contenedor: resultado.dataset.contenedor,
-
-    recomendacion: resultado.dataset.recomendacion,
-
-    origen: sessionStorage.getItem(
+const origen =
+    sessionStorage.getItem(
         "recibotOrigenPendiente"
-    ),
+    ) || "Archivo";
 
+const identificador = [
+    categoria,
+    confianza,
+    contenedor,
+    recomendacion
+].join("|");
+
+const fueGuardada = agregarClasificacion({
+    id: identificador,
+    categoria,
+    confianza,
+    contenedor,
+    recomendacion,
+    origen,
     fecha: new Date().toLocaleString("es-CO")
-
 });
+
+if (fueGuardada) {
+    mostrarHistorial();
+}
+
+sessionStorage.removeItem(
+    "recibotOrigenPendiente"
+);
 }
 
 
@@ -86,19 +105,31 @@ function guardarHistorial(historial) {
 
 
 function agregarClasificacion(clasificacion) {
-
     const historial = obtenerHistorial();
+
+    const yaExiste = historial.some((item) => {
+        return item.id === clasificacion.id;
+    });
+
+    if (yaExiste) {
+        console.log(
+            "La clasificación ya estaba guardada"
+        );
+
+        return false;
+    }
 
     historial.unshift(clasificacion);
 
-    guardarHistorial(historial);
+    const historialLimitado = historial.slice(0, 50);
+
+    guardarHistorial(historialLimitado);
 
     console.log("Clasificación guardada");
+    console.table(historialLimitado);
 
-    console.table(historial);
-
+    return true;
 }
-
 
 function mostrarHistorial() {
     const contenedor = document.getElementById(
@@ -139,7 +170,40 @@ function mostrarHistorial() {
 
     historial.forEach((item) => {
         const tarjeta = document.createElement("article");
+const coloresContenedor = {
+    Verde: "verde",
+    Blanco: "blanco",
+    Negro: "negro"
+};
 
+const colorContenedor =
+    coloresContenedor[item.contenedor] || "neutro";
+
+        const iconos = {
+    Cartón: "📦",
+    Plástico: "🥤",
+    Vidrio: "🍾",
+    Metal: "🥫",
+    Orgánico: "🍌"
+
+    
+};
+
+const icono =
+    iconos[item.categoria] || "♻️";
+const valorConfianza =
+    Number.parseFloat(item.confianza) || 0;
+
+let nivelConfianza = "Baja";
+let claseConfianza = "confianza-baja";
+
+if (valorConfianza >= 80) {
+    nivelConfianza = "Alta";
+    claseConfianza = "confianza-alta";
+} else if (valorConfianza >= 60) {
+    nivelConfianza = "Media";
+    claseConfianza = "confianza-media";
+}
         tarjeta.className = "tarjeta-historial";
 
         tarjeta.innerHTML = `
@@ -148,17 +212,41 @@ function mostrarHistorial() {
             </div>
 
             <div class="info-historial">
-                <h4>${item.categoria}</h4>
+                <div class="historial-encabezado">
+    <h4>${icono} ${item.categoria}</h4>
 
-                <p>
-                    <strong>Confianza:</strong>
-                    ${item.confianza}%
-                </p>
+    <span class="badge-confianza ${claseConfianza}">
+        Confianza ${nivelConfianza}
+    </span>
+</div>
 
-                <p>
-                    <strong>Contenedor:</strong>
-                    ${item.contenedor}
-                </p>
+                <div class="historial-confianza">
+
+    <div class="historial-confianza-texto">
+        <span>Confianza</span>
+        <strong>${item.confianza}%</strong>
+    </div>
+
+    <div class="barra-confianza">
+
+        <div
+            class="barra-confianza-progreso"
+            style="width:${item.confianza}%">
+        </div>
+
+    </div>
+
+</div>
+
+                <p class="historial-contenedor">
+    <span
+        class="punto-contenedor punto-${colorContenedor}"
+        aria-hidden="true"
+    ></span>
+
+    <strong>Contenedor:</strong>
+    ${item.contenedor}
+</p>
 
                 <p>
                     <strong>Origen:</strong>
