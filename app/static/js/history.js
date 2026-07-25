@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-    
     registrarResultadoActual();
-    mostrarHistorial();    
+    mostrarHistorial();
+    mostrarEstadisticas();   
 
 });
 
@@ -262,11 +262,109 @@ if (valorConfianza >= 80) {
         contenedor.appendChild(tarjeta);
     });
 }
+    
+function obtenerEstadisticas() {
 
+    const historial = obtenerHistorial();
+
+    const estadisticas = {
+
+        total: historial.length,
+
+        promedioConfianza: 0,
+
+        categorias: {
+
+            "Orgánico": 0,
+
+            "Cartón": 0,
+
+            "Plástico": 0,
+
+            "Metal": 0,
+
+            "Vidrio": 0
+
+        }
+
+    };
+
+    let suma = 0;
+
+    historial.forEach(item => {
+
+        if (estadisticas.categorias[item.categoria] !== undefined) {
+
+            estadisticas.categorias[item.categoria]++;
+
+        }
+
+        suma += Number(item.confianza);
+
+    });
+
+    if (historial.length > 0) {
+
+        estadisticas.promedioConfianza =
+            (suma / historial.length).toFixed(2);
+
+    }
+
+    return estadisticas;
+
+}
 
 
 window.HistoryRecibot = {
-
-    agregarClasificacion
-
+    agregarClasificacion,
+    obtenerHistorial,
+    obtenerEstadisticas,
+    mostrarEstadisticas
+    
 };
+function mostrarEstadisticas() {
+    const panel = document.querySelector(
+        '[data-panel="estadisticas"]'
+    );
+
+    if (!panel) {
+        return;
+    }
+
+    const estadisticas = obtenerEstadisticas();
+
+    const categoriaPrincipal = Object.entries(
+        estadisticas.categorias
+    ).sort((a, b) => b[1] - a[1])[0];
+
+    const nombrePrincipal =
+        categoriaPrincipal?.[1] > 0
+            ? categoriaPrincipal[0]
+            : "Sin datos";
+
+    panel.innerHTML = `
+        <div class="panel-estadisticas">
+            <div class="resumen-estadisticas">
+                <article class="tarjeta-estadistica">
+                    <span>📋</span>
+                    <p>Total de clasificaciones</p>
+                    <strong>${estadisticas.total}</strong>
+                </article>
+
+                <article class="tarjeta-estadistica">
+                    <span>🎯</span>
+                    <p>Promedio de confianza</p>
+                    <strong>
+                        ${estadisticas.promedioConfianza}%
+                    </strong>
+                </article>
+
+                <article class="tarjeta-estadistica">
+                    <span>🏆</span>
+                    <p>Categoría más frecuente</p>
+                    <strong>${nombrePrincipal}</strong>
+                </article>
+            </div>
+        </div>
+    `;
+}
