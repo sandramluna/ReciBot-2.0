@@ -794,8 +794,43 @@
 
     </div>
     </div>
+<div class="ecochat">
+
+    <div class="ecochat-header">
+        💬 EcoChat IA
+    </div>
+
+    <div
+        id="chatMensajes"
+        class="chat-mensajes">
+
+        <div class="mensaje-bot">
+            👋 Hola.
+
+            Soy EcoChat.
+
+            Pregúntame cualquier cosa sobre reciclaje,
+            residuos o medio ambiente.
+        </div>
+
+    </div>
+
+    <div class="chat-input">
+
+        <input
+            id="preguntaUsuario"
+            type="text"
+            placeholder="Escribe tu pregunta...">
+
+        <button id="btnEnviarPregunta">
+            Enviar
+        </button>
+
+    </div>
 
 </div>
+</div>
+
             
                
 </section>
@@ -887,6 +922,7 @@
     src="{{ url_for('static', filename='js/history.js') }}"
     defer
 ></script>
+<script src="{{ url_for('static', filename='js/ecochat.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
 

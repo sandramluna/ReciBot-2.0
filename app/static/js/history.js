@@ -46,6 +46,10 @@ function registrarResultadoActual() {
     );
     
 const categoria = resultado.dataset.categoria;
+sessionStorage.setItem(
+    "ultimaCategoria",
+    categoria
+);
 if (typeof mostrarInformacionAmbiental === "function") {
     mostrarInformacionAmbiental(categoria);
 }
