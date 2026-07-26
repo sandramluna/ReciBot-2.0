@@ -871,6 +871,7 @@
             </p>
         </div>
     </footer>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script
     src="{{ url_for('static', filename='js/history.js') }}"
     defer
@@ -881,6 +882,7 @@
     ></script>
 
     {% if desplazarse_clasificador %}
+
 <script>
     window.addEventListener("DOMContentLoaded", () => {
         const clasificador = document.querySelector("#clasificador");

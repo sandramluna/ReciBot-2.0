@@ -285,8 +285,14 @@ function obtenerEstadisticas() {
 
             "Vidrio": 0
 
-        }
-
+        },
+            porcentajes: {
+    "Orgánico": 0,
+    "Cartón": 0,
+    "Plástico": 0,
+    "Metal": 0,
+    "Vidrio": 0
+}
     };
 
     let suma = 0;
@@ -309,6 +315,15 @@ function obtenerEstadisticas() {
             (suma / historial.length).toFixed(2);
 
     }
+    for (const categoria in estadisticas.categorias) {
+
+    estadisticas.porcentajes[categoria] =
+        (
+            estadisticas.categorias[categoria] /
+            estadisticas.total
+        ) * 100;
+
+}
 
     return estadisticas;
 
@@ -332,6 +347,7 @@ function mostrarEstadisticas() {
     }
 
     const estadisticas = obtenerEstadisticas();
+    console.log(estadisticas);
 
     const categoriaPrincipal = Object.entries(
         estadisticas.categorias
@@ -365,6 +381,131 @@ function mostrarEstadisticas() {
                     <strong>${nombrePrincipal}</strong>
                 </article>
             </div>
+            <div class="distribucion-estadisticas">
+    <h3>📊 Distribución de residuos</h3>
+
+    <div id="listaDistribucion"></div>
+</div>
+           <div class="grafico-estadisticas">
+    <h3>📊 Clasificaciones por categoría</h3>
+
+    <canvas id="graficoCategorias"></canvas>
+</div> 
         </div>
     `;
+    const listaDistribucion =
+    document.getElementById("listaDistribucion");
+    listaDistribucion.innerHTML = "";
+    const colores = {
+    "Orgánico": "#4CAF50",
+    "Cartón": "#8D6E63",
+    "Plástico": "#42A5F5",
+    "Metal": "#9E9E9E",
+    "Vidrio": "#26C6DA"
+};
+    for (const categoria in estadisticas.porcentajes) {
+        if (estadisticas.porcentajes[categoria] === 0) {
+        continue;
+    }
+
+listaDistribucion.innerHTML += `
+<div class="item-distribucion">
+
+    <div class="cabecera-distribucion">
+        <span>${categoria}</span>
+
+        <strong>
+            ${estadisticas.porcentajes[categoria].toFixed(1)}%
+        </strong>
+    </div>
+
+    <div class="barra-fondo">
+        <div
+            class="barra-porcentaje"
+            style="width:${estadisticas.porcentajes[categoria]}%">
+        </div>
+    </div>
+
+</div>
+`;
+}
+    dibujarGraficoCategorias(estadisticas);
+}
+function dibujarGraficoCategorias(estadisticas) {
+const canvas = document.getElementById("graficoCategorias");
+
+if (!canvas) {
+    return;
+}
+const contexto = canvas.getContext("2d");
+new Chart(contexto, {
+    type: "bar",
+
+    data: {
+        labels: Object.keys(estadisticas.categorias),
+
+        datasets: [
+            {
+    label: "Clasificaciones",
+    data: Object.values(estadisticas.categorias),
+
+    backgroundColor: [
+        "#4CAF50", // Orgánico
+        "#8D6E63", // Cartón
+        "#FBC02D", // Plástico
+        "#9E9E9E", // Metal
+        "#42A5F5"  // Vidrio
+    ],
+
+    borderColor: [
+        "#388E3C",
+        "#6D4C41",
+        "#F9A825",
+        "#757575",
+        "#1E88E5"
+    ],
+
+    borderWidth: 2,
+
+    borderRadius: 8
+}
+        ]
+    },
+
+    options: {
+    responsive: true,
+   
+    animation: {
+    duration: 800,
+    easing: "easeOutQuart"
+},
+
+    plugins: {
+        legend: {
+            display: false
+        }
+    },
+
+    scales: {
+    x: {
+        grid: {
+            display: false
+        }
+    },
+
+    y: {
+        beginAtZero: true,
+
+        ticks: {
+            stepSize: 1,
+            precision: 0
+        },
+
+        grid: {
+            color: "rgba(0,0,0,0.08)"
+        }
+    }
+}
+}
+});
 }
