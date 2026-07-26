@@ -538,3 +538,58 @@ if (modalCamara) {
         }
     });
 }
+function mostrarInformacionAmbiental(categoria) {
+
+    const contenido = document.getElementById("contenidoAsistente");
+
+    if (!contenido) return;
+
+    const info = BASE_CONOCIMIENTO[categoria];
+
+    if (!info) {
+        contenido.innerHTML = `
+            <div class="bienvenida-asistente">
+                <h3>🤖 Asistente Ambiental ReciBot</h3>
+
+                <p>
+                    No encontré información para esta categoría.
+                </p>
+            </div>
+        `;
+        return;
+    }
+window.mostrarInformacionAmbiental = mostrarInformacionAmbiental;
+
+    contenido.innerHTML = `
+        <div class="tarjeta-conocimiento">
+
+            <h2>${categoria}</h2>
+
+            <div class="item-conocimiento">
+                <h4>🗑️ Contenedor</h4>
+                <p>${info.contenedor}</p>
+            </div>
+
+            <div class="item-conocimiento">
+                <h4>💡 Consejo</h4>
+                <p>${info.consejo}</p>
+            </div>
+
+            <div class="item-conocimiento">
+                <h4>🌎 Curiosidad</h4>
+                <p>${info.curiosidad}</p>
+            </div>
+
+            <div class="item-conocimiento">
+                <h4>✅ Beneficio ambiental</h4>
+                <p>${info.beneficio}</p>
+            </div>
+
+            <div class="mensaje-final">
+                ${info.mensaje}
+            </div>
+
+        </div>
+    `;
+
+}

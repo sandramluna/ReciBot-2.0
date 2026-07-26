@@ -778,19 +778,26 @@
                 id="panel-asistente"
                 data-panel="asistente"
                 role="tabpanel"
-                hidden
-            >
-                <div class="estado-vacio">
-                    <span class="estado-vacio-icono">🤖</span>
-                    <h3>El asistente inteligente llegará en una próxima versión</h3>
-                    <p>
-                        Podrás hacer preguntas relacionadas con reciclaje,
-                        separación de residuos y cuidado ambiental.
-                    </p>
-                </div>
-            </div>
-        </div>
+                hidden> 
+
+            <div id="contenidoAsistente" class="contenido-asistente">
+
+    <div class="bienvenida-asistente">
+
+        <h3>🤖 Asistente Ambiental ReciBot</h3>
+
+        <p>
+            Clasifica un residuo para recibir consejos,
+            curiosidades, beneficios ambientales y recomendaciones
+            inteligentes.
+        </p>
+
     </div>
+    </div>
+
+</div>
+            
+               
 </section>
 
         <section class="seccion seccion-clara" id="beneficios">
@@ -871,15 +878,17 @@
             </p>
         </div>
     </footer>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script
-    src="{{ url_for('static', filename='js/history.js') }}"
-    defer
-></script>
+    <script src="/static/js/conocimiento.js"></script>
     <script
         src="{{ url_for('static', filename='js/main.js') }}"
         defer
     ></script>
+    <script
+    src="{{ url_for('static', filename='js/history.js') }}"
+    defer
+></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
 
     {% if desplazarse_clasificador %}
 

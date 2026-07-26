@@ -46,6 +46,9 @@ function registrarResultadoActual() {
     );
     
 const categoria = resultado.dataset.categoria;
+if (typeof mostrarInformacionAmbiental === "function") {
+    mostrarInformacionAmbiental(categoria);
+}
 const confianza = resultado.dataset.confianza;
 const contenedor = resultado.dataset.contenedor;
 const recomendacion =
