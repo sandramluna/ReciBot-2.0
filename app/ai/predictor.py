@@ -95,29 +95,51 @@ def cargar_etiquetas() -> list[str]:
 
 def obtener_modelo() -> tf.keras.Model:
     """
-    Carga el modelo una sola vez y lo reutiliza
-    durante la ejecución de Flask.
+    Carga el modelo y sus etiquetas una sola vez.
+
+    La asignación se realiza únicamente después de que
+    ambos recursos hayan cargado correctamente.
     """
 
     global _modelo, _etiquetas
 
-    if _modelo is None:
+    if _modelo is None or _etiquetas is None:
         with _bloqueo:
-            if _modelo is None:
+            if _modelo is None or _etiquetas is None:
                 if not MODELO_PATH.exists():
                     raise FileNotFoundError(
                         f"No se encontró el modelo:\n{MODELO_PATH}"
                     )
 
-                print("Cargando modelo de ReciBot...")
+                print("Cargando modelo y etiquetas de ReciBot...")
 
-                _modelo = tf.keras.models.load_model(
+                # Cargar primero en variables temporales.
+                modelo_temporal = tf.keras.models.load_model(
                     MODELO_PATH
                 )
 
-                _etiquetas = cargar_etiquetas()
+                etiquetas_temporales = cargar_etiquetas()
 
-                print("Modelo de ReciBot cargado correctamente.")
+                cantidad_salidas = int(
+                    modelo_temporal.output_shape[-1]
+                )
+
+                if len(etiquetas_temporales) != cantidad_salidas:
+                    raise ValueError(
+                        "El número de etiquetas no coincide con "
+                        "las salidas del modelo. "
+                        f"Modelo: {cantidad_salidas}; "
+                        f"etiquetas: {len(etiquetas_temporales)}."
+                    )
+
+                # Asignar solamente cuando todo haya salido bien.
+                _modelo = modelo_temporal
+                _etiquetas = etiquetas_temporales
+
+                print(
+                    "Modelo de ReciBot cargado correctamente "
+                    f"con {len(_etiquetas)} categorías."
+                )
 
     return _modelo
 
@@ -172,6 +194,10 @@ def clasificar_imagen(
     """
 
     modelo = obtener_modelo()
+    if _etiquetas is None:
+    raise RuntimeError(
+        "Las etiquetas del modelo no fueron cargadas."
+    )
     imagen = preparar_imagen(ruta_imagen)
 
     probabilidades = modelo.predict(
@@ -186,7 +212,11 @@ def clasificar_imagen(
     confianza = float(
         probabilidades[indice]
     )
-
+if indice >= len(_etiquetas):
+    raise IndexError(
+        "El índice predicho está fuera del rango de etiquetas. "
+        f"Índice: {indice}; etiquetas: {len(_etiquetas)}."
+    )
     etiqueta = _etiquetas[indice]
 
     return {
