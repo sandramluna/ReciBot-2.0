@@ -30,7 +30,6 @@ function inicializarEcoChat() {
 function enviarPregunta() {
 
     const input = document.getElementById("preguntaUsuario");
-
     const pregunta = input.value.trim();
 
     if (pregunta === "") return;
@@ -39,35 +38,133 @@ function enviarPregunta() {
 
     agregarMensajeUsuario(pregunta);
 
-    const respuesta = interpretarPregunta(pregunta);
+    mostrarTyping();
 
-    agregarMensajeBot(respuesta);
+    setTimeout(() => {
 
+        ocultarTyping();
+
+        const respuesta = interpretarPregunta(pregunta);
+
+        agregarMensajeBot(respuesta);
+
+    }, 900);
 }
-function agregarMensajeUsuario(texto){
+function agregarMensajeUsuario(texto) {
 
     const chat = document.getElementById("chatMensajes");
 
-    chat.innerHTML += `
-        <div class="mensaje-usuario">
-            ${texto}
-        </div>
-    `;
+    const mensaje = document.createElement("div");
+    mensaje.className = "chat-message user";
+
+    const burbuja = document.createElement("div");
+    burbuja.className = "chat-bubble";
+
+    // textContent evita errores cuando el usuario escribe símbolos o etiquetas
+    burbuja.textContent = texto;
+
+    const avatar = document.createElement("div");
+    avatar.className = "chat-avatar";
+    avatar.textContent = "👤";
+
+    mensaje.appendChild(burbuja);
+    mensaje.appendChild(avatar);
+
+    chat.appendChild(mensaje);
 
     chat.scrollTop = chat.scrollHeight;
-
 }
-function agregarMensajeBot(texto){
-
+function agregarMensajeBot(texto) {
     const chat = document.getElementById("chatMensajes");
 
-    chat.innerHTML += `
-        <div class="mensaje-bot">
-            ${texto}
+    if (!chat) return;
+
+    const mensaje = document.createElement("div");
+    mensaje.className = "chat-message bot";
+
+    const avatar = document.createElement("div");
+    avatar.className = "chat-avatar";
+
+    avatar.innerHTML = `
+        <div class="ecobot-mini">
+            <div class="ecobot-mini-head">
+                <span class="mini-eye"></span>
+                <span class="mini-eye"></span>
+            </div>
         </div>
     `;
 
+    const burbuja = document.createElement("div");
+    burbuja.className = "chat-bubble";
+
+    mensaje.appendChild(avatar);
+    mensaje.appendChild(burbuja);
+
+    chat.appendChild(mensaje);
     chat.scrollTop = chat.scrollHeight;
+
+    const contieneHTML = /<[^>]+>/.test(texto);
+
+    if (contieneHTML) {
+        burbuja.innerHTML = texto;
+        chat.scrollTop = chat.scrollHeight;
+        return;
+    }
+
+    escribirTextoProgresivo(burbuja, texto, chat);
+}
+function escribirTextoProgresivo(elemento, texto, chat) {
+    let indice = 0;
+    const velocidad = 22;
+
+    elemento.textContent = "";
+
+    function escribirCaracter() {
+        if (indice < texto.length) {
+            elemento.textContent += texto.charAt(indice);
+            indice += 1;
+
+            chat.scrollTop = chat.scrollHeight;
+
+            window.setTimeout(escribirCaracter, velocidad);
+        }
+    }
+
+    escribirCaracter();
+}
+function mostrarTyping() {
+    const chat = document.getElementById("chatMensajes");
+
+    if (!chat) return;
+
+    chat.insertAdjacentHTML(
+        "beforeend",
+        `
+        <div class="chat-message bot" id="typingMessage">
+            <div class="chat-avatar">🤖</div>
+
+            <div class="chat-bubble">
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+        </div>
+        `
+    );
+
+    chat.scrollTop = chat.scrollHeight;
+}
+function ocultarTyping(){
+
+    const typing = document.getElementById("typingMessage");
+
+    if(typing){
+
+        typing.remove();
+
+    }
 
 }
 function interpretarPregunta(pregunta){
@@ -83,7 +180,7 @@ function interpretarPregunta(pregunta){
         texto.includes("buenas noches")
     ) {
 
-        return "👋 ¡Hola! Soy EcoChat. ¿En qué puedo ayudarte sobre reciclaje o medio ambiente?";
+        return  "🌎 Soy <strong>EcoBot</strong>, el asistente inteligente de ReciBot 2.0. Puedo ayudarte con reciclaje, residuos y cuidado del medio ambiente.";
 
     }
 
@@ -117,7 +214,21 @@ function interpretarPregunta(pregunta){
     texto.includes("eres quien")
     ) {
 
-        return "🌎 Soy EcoChat, el asistente ambiental de ReciBot 2.0.";
+        return `👋 Hola.
+
+Soy <strong>EcoBot</strong>, tu asistente ambiental inteligente.
+
+Puedo ayudarte a:
+
+♻️ Clasificar residuos.
+
+🗑️ Identificar el contenedor correcto.
+
+🌱 Explicar conceptos de reciclaje.
+
+💡 Compartir consejos para cuidar el planeta.
+
+¿En qué puedo ayudarte hoy?`;
 
     }
 
@@ -152,16 +263,61 @@ if(categoria){
 
     if(info){
 
-        return `
-📦 <strong>${categoria}</strong><br><br>
+      return `
 
-🗑️ <strong>Contenedor:</strong> ${info.contenedor}<br><br>
+<div class="eco-card">
 
-💡 <strong>Consejo:</strong><br>
-${info.consejo}<br><br>
+    <h4>📦 ${categoria}</h4>
 
-🌱 <strong>Beneficio:</strong><br>
-${info.beneficio}
+    <div class="eco-divider"></div>
+
+    <div class="eco-card-section">
+
+        <div class="eco-card-title">
+            🗑️ CONTENEDOR
+        </div>
+
+        ${info.contenedor}
+
+    </div>
+
+    <div class="eco-divider"></div>
+
+    <div class="eco-card-section">
+
+        <div class="eco-card-title">
+            💡 CONSEJO
+        </div>
+
+        ${info.consejo}
+
+    </div>
+
+    <div class="eco-divider"></div>
+
+    <div class="eco-card-section">
+
+        <div class="eco-card-title">
+            🌱 BENEFICIO
+        </div>
+
+        ${info.beneficio}
+
+    </div>
+
+    <div class="eco-divider"></div>
+
+    <div class="eco-card-section">
+
+        <div class="eco-card-title">
+            📚 CURIOSIDAD
+        </div>
+
+        ${info.curiosidad}
+
+    </div>
+
+</div>
 
 `;
 
@@ -289,5 +445,14 @@ function buscarObjeto(texto){
     }
 
     return null;
+
+}
+function preguntaRapida(texto){
+
+    const input = document.getElementById("preguntaUsuario");
+
+    input.value = texto;
+
+    document.getElementById("btnEnviarPregunta").click();
 
 }

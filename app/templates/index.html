@@ -110,18 +110,40 @@
                     <div class="orbita orbita-superior"></div>
                     <div class="orbita orbita-inferior"></div>
 
-                    <div class="robot-tarjeta">
-                        <div class="robot-cabeza">
-                            <span class="robot-ojo"></span>
-                            <span class="robot-ojo"></span>
-                        </div>
+                    <div
+    class="robot-tarjeta ecobot"
+    id="ecobot-hero"
+    aria-label="EcoBot, asistente ambiental de ReciBot"
+>
+    <div class="ecobot-antena" aria-hidden="true">
+        <span class="ecobot-antena-luz"></span>
+    </div>
 
-                        <div class="robot-cuerpo">
-                            <span>♻</span>
-                        </div>
+    <div class="robot-cabeza">
+        <div class="ecobot-pantalla">
+            <span class="robot-ojo"></span>
+            <span class="robot-ojo"></span>
+        </div>
+    </div>
 
-                        <p>Preparado para analizar</p>
-                    </div>
+    <div class="robot-cuerpo">
+        <span class="ecobot-simbolo" aria-hidden="true">♻</span>
+    </div>
+
+    <div class="ecobot-identidad">
+        <strong>EcoBot</strong>
+        <span>Asistente ambiental inteligente</span>
+    </div>
+
+    <p class="ecobot-estado">
+        <span class="ecobot-estado-punto"></span>
+        Preparado para analizar
+    </p>
+
+    <span class="ecobot-destello ecobot-destello-uno">✦</span>
+    <span class="ecobot-destello ecobot-destello-dos">●</span>
+    <span class="ecobot-destello ecobot-destello-tres">✦</span>
+</div>
 
                     <div class="mini-tarjeta mini-tarjeta-plastico">
                         <span>🧴</span>
@@ -784,7 +806,10 @@
 
     <div class="bienvenida-asistente">
 
-        <h3>🤖 Asistente Ambiental ReciBot</h3>
+       <h3>🤖 EcoBot IA</h3>
+<p class="assistant-subtitle">
+    Asistente Ambiental Inteligente
+</p>
 
         <p>
             Clasifica un residuo para recibir consejos,
@@ -796,25 +821,67 @@
     </div>
 <div class="ecochat">
 
-    <div class="ecochat-header">
-        💬 EcoChat IA
-    </div>
+    <div class="chat-header">
+    🤖 EcoBot IA
+</div>
 
     <div
         id="chatMensajes"
         class="chat-mensajes">
 
         <div class="mensaje-bot">
-            👋 Hola.
+            👋 Hola.<br><br>
 
-            Soy EcoChat.
+Soy <strong>EcoBot</strong>, tu asistente ambiental inteligente.<br><br>
 
-            Pregúntame cualquier cosa sobre reciclaje,
-            residuos o medio ambiente.
+Puedo ayudarte a:<br><br>
+
+♻️ Clasificar residuos.<br>
+🗑️ Identificar el contenedor correcto.<br>
+🌱 Explicar conceptos de reciclaje.<br>
+💡 Compartir consejos ambientales.<br><br>
+
+<b>¿En qué puedo ayudarte hoy?</b>
         </div>
+<div class="ecobot-idle">
 
+    <div class="ecobot-idle-icon">
+        🤖
     </div>
 
+    <h3>EcoBot</h3>
+
+    <p>
+        Estoy listo para ayudarte.
+    </p>
+
+    <small>
+        Pregúntame sobre reciclaje,
+        clasificación de residuos
+        o sostenibilidad.
+    </small>
+
+</div>
+    </div>
+<div class="quick-actions">
+
+    <button class="quick-btn" onclick="preguntaRapida('¿Cómo reciclar plástico?')">
+        ♻️ ¿Cómo reciclar plástico?
+    </button>
+
+    <button class="quick-btn" onclick="preguntaRapida('¿Qué va en el contenedor verde?')">
+        🗑️ Contenedor verde
+    </button>
+
+    <button class="quick-btn" onclick="preguntaRapida('Dame un consejo ambiental')">
+        🌎 Consejo ambiental
+    </button>
+
+    <button class="quick-btn" onclick="preguntaRapida('¿Cómo clasifico una imagen?')">
+        📷 Clasificar imagen
+    </button>
+
+</div>
     <div class="chat-input">
 
         <input

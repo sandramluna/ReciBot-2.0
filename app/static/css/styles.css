@@ -2096,34 +2096,47 @@ HISTORIAL
     border-top: 1px solid #e4ece7;
 }
 
-.chat-input input {
-    width: 100%;
-    padding: 13px 16px;
-    border: 1px solid #cbd8cf;
-    border-radius: 12px;
-    font: inherit;
-    outline: none;
+.chat-input input{
+
+    width:100%;
+    padding:13px 16px;
+    border:1px solid #cbd8cf;
+    border-radius:12px;
+    font:inherit;
+    outline:none;
+
+    transition:
+        border-color .25s ease,
+        box-shadow .25s ease;
+
 }
 
-.chat-input input:focus {
-    border-color: #2f8f46;
-    box-shadow: 0 0 0 3px rgba(47, 143, 70, 0.15);
+.chat-input button{
+
+    padding:13px 22px;
+    border:none;
+    border-radius:12px;
+    background:#237a3b;
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        background .25s ease;
+
 }
 
-.chat-input button {
-    padding: 13px 22px;
-    border: none;
-    border-radius: 12px;
-    background: #237a3b;
-    color: #ffffff;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.2s ease, background 0.2s ease;
-}
+.chat-input button:hover{
 
-.chat-input button:hover {
-    background: #185f2d;
-    transform: translateY(-1px);
+    background:#1d6d34;
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 10px 20px rgba(35,122,59,.30);
+
 }
 
 @media (max-width: 600px) {
@@ -2146,4 +2159,672 @@ HISTORIAL
 .chat-mensajes::-webkit-scrollbar-thumb{
     background:#4CAF50;
     border-radius:20px;
+}
+.chat-input input:focus{
+    border-color:#2E7D32;
+    box-shadow:0 0 12px rgba(76,175,80,.25);
+}
+/* ===========================
+   ECOCHAT MODERNO
+=========================== */
+
+.chat-message{
+animation: aparecerMensaje .35s ease;
+    display:flex;
+
+    margin:15px 0;
+
+    align-items:flex-start;
+
+    gap:10px;
+
+}
+.chat-message.user{
+    justify-content:flex-end;
+}
+
+.chat-message.bot{
+    justify-content:flex-start;
+}
+
+.chat-avatar{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:20px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:22px;
+
+    flex-shrink:0;
+
+    background:#e8f5e9;
+
+}
+
+.chat-message.user .chat-avatar{
+
+    background:#1976d2;
+
+    color:white;
+
+}
+
+.chat-message.bot .chat-avatar{
+
+    background:#4caf50;
+
+    color:white;
+
+}
+
+.chat-bubble{
+
+    max-width:70%;
+
+    padding:12px 16px;
+
+    border-radius:18px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.12);
+
+    line-height:1.5;
+
+    animation:fadeIn .25s ease;
+
+}
+
+.chat-message.user .chat-bubble{
+
+    background:#1976d2;
+
+    color:white;
+
+    border-bottom-right-radius:5px;
+
+}
+
+.chat-message.bot .chat-bubble{
+
+    background:white;
+
+    border-bottom-left-radius:5px;
+
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(8px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+/* ===========================
+   TYPING INDICATOR
+=========================== */
+
+.typing-indicator{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:5px;
+
+    padding:8px 12px;
+
+}
+
+.typing-dot{
+
+    width:8px;
+
+    height:8px;
+
+    border-radius:50%;
+
+    background:#4caf50;
+
+    animation:typing 1.2s infinite;
+
+}
+
+.typing-dot:nth-child(2){
+
+    animation-delay:.2s;
+
+}
+
+.typing-dot:nth-child(3){
+
+    animation-delay:.4s;
+
+}
+
+@keyframes typing{
+
+    0%,80%,100%{
+
+        transform:scale(.5);
+
+        opacity:.4;
+
+    }
+
+    40%{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
+
+}
+/* ===========================
+   TARJETA PREMIUM ECOCHAT
+=========================== */
+
+.eco-card{
+
+    background:#ffffff;
+
+    border-left:6px solid #2E7D32;
+
+    border-radius:18px;
+
+    padding:20px;
+
+    margin-top:10px;
+
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
+
+    animation:cardAppear .35s ease;
+
+}
+
+.eco-card h4{
+
+    margin:0;
+
+    font-size:22px;
+
+    color:#2E7D32;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+}
+
+.eco-divider{
+
+    height:1px;
+
+    background:#E8F5E9;
+
+    margin:15px 0;
+
+}
+
+.eco-card-section{
+
+    margin:12px 0;
+
+}
+
+.eco-card-title{
+
+    color:#2E7D32;
+
+    font-weight:bold;
+
+    text-transform:uppercase;
+
+    margin-bottom:6px;
+
+    letter-spacing:.5px;
+
+}
+
+@keyframes cardAppear{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(12px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+/* =====================================================
+   SPRINT 11.4 — ECOBOT: IDENTIDAD Y ANIMACIÓN
+   ===================================================== */
+
+.ecobot {
+    isolation: isolate;
+    animation: ecobotFlotar 4.8s ease-in-out infinite;
+    transform-origin: center bottom;
+}
+
+.ecobot::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    bottom: 20px;
+    width: 180px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(23, 75, 43, 0.16);
+    filter: blur(12px);
+    transform: translateX(-50%);
+    animation: ecobotSombra 4.8s ease-in-out infinite;
+}
+
+.ecobot-antena {
+    position: relative;
+    width: 8px;
+    height: 42px;
+    margin-bottom: -9px;
+    border-radius: 999px;
+    background: linear-gradient(
+        to bottom,
+        var(--verde-brillante),
+        var(--verde-profundo)
+    );
+    transform-origin: bottom center;
+    animation: ecobotAntena 3.4s ease-in-out infinite;
+}
+
+.ecobot-antena-luz {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+    border: 5px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    background-color: var(--verde-brillante);
+    box-shadow:
+        0 0 0 7px rgba(85, 196, 107, 0.12),
+        0 0 24px rgba(85, 196, 107, 0.85);
+    transform: translateX(-50%);
+    animation: ecobotLuz 2.2s ease-in-out infinite;
+}
+
+.ecobot-pantalla {
+    width: 124px;
+    height: 67px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    border: 1px solid rgba(186, 245, 197, 0.18);
+    border-radius: 31px;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(85, 196, 107, 0.18),
+            transparent 68%
+        ),
+        rgba(7, 36, 22, 0.48);
+    box-shadow:
+        inset 0 8px 16px rgba(0, 0, 0, 0.18),
+        0 0 18px rgba(85, 196, 107, 0.1);
+}
+
+.ecobot .robot-ojo {
+    position: relative;
+    transform-origin: center;
+    animation:
+        ecobotParpadeo 5.5s infinite,
+        ecobotBrilloOjos 2.4s ease-in-out infinite;
+}
+
+.ecobot .robot-cuerpo {
+    position: relative;
+}
+
+.ecobot .robot-cuerpo::before,
+.ecobot .robot-cuerpo::after {
+    content: "";
+    position: absolute;
+    top: 37px;
+    width: 28px;
+    height: 78px;
+    border-radius: 18px;
+    background: linear-gradient(
+        180deg,
+        var(--verde-principal),
+        var(--verde-profundo)
+    );
+    box-shadow: 0 10px 20px rgba(23, 75, 43, 0.14);
+}
+
+.ecobot .robot-cuerpo::before {
+    left: -18px;
+    transform: rotate(7deg);
+}
+
+.ecobot .robot-cuerpo::after {
+    right: -18px;
+    transform: rotate(-7deg);
+}
+
+.ecobot-simbolo {
+    display: inline-block;
+    filter: drop-shadow(0 8px 10px rgba(46, 125, 50, 0.17));
+    animation: ecobotSimbolo 5s ease-in-out infinite;
+}
+
+.ecobot-identidad {
+    display: grid;
+    gap: 2px;
+    margin-top: 19px;
+    text-align: center;
+}
+
+.ecobot-identidad strong {
+    font-size: 22px;
+    line-height: 1;
+    color: var(--verde-profundo);
+}
+
+.ecobot-identidad span {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gris-medio);
+}
+
+.ecobot .ecobot-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+    padding: 8px 12px;
+    border: 1px solid rgba(46, 125, 50, 0.12);
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--verde-oscuro);
+    background-color: rgba(233, 246, 236, 0.92);
+}
+
+.ecobot-estado-punto {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: var(--verde-brillante);
+    box-shadow: 0 0 0 4px rgba(85, 196, 107, 0.15);
+    animation: ecobotEstado 1.8s ease-in-out infinite;
+}
+
+.ecobot-destello {
+    position: absolute;
+    z-index: 5;
+    color: var(--verde-brillante);
+    pointer-events: none;
+    animation: ecobotDestello 3s ease-in-out infinite;
+}
+
+.ecobot-destello-uno {
+    top: 58px;
+    left: 25px;
+    font-size: 20px;
+}
+
+.ecobot-destello-dos {
+    top: 142px;
+    right: 25px;
+    font-size: 8px;
+    animation-delay: 0.8s;
+}
+
+.ecobot-destello-tres {
+    right: 32px;
+    bottom: 110px;
+    font-size: 15px;
+    animation-delay: 1.5s;
+}
+
+@keyframes ecobotFlotar {
+    0%,
+    100% {
+        transform: rotate(-2deg) translateY(0);
+    }
+
+    50% {
+        transform: rotate(-1deg) translateY(-10px);
+    }
+}
+
+@keyframes ecobotSombra {
+    0%,
+    100% {
+        opacity: 0.65;
+        transform: translateX(-50%) scaleX(1);
+    }
+
+    50% {
+        opacity: 0.38;
+        transform: translateX(-50%) scaleX(0.82);
+    }
+}
+
+@keyframes ecobotParpadeo {
+    0%,
+    45%,
+    48%,
+    100% {
+        transform: scaleY(1);
+    }
+
+    46%,
+    47% {
+        transform: scaleY(0.12);
+    }
+}
+
+@keyframes ecobotBrilloOjos {
+    0%,
+    100% {
+        box-shadow: 0 0 15px rgba(186, 245, 197, 0.45);
+    }
+
+    50% {
+        box-shadow:
+            0 0 24px rgba(186, 245, 197, 0.95),
+            0 0 38px rgba(85, 196, 107, 0.35);
+    }
+}
+
+@keyframes ecobotAntena {
+    0%,
+    100% {
+        transform: rotate(-3deg);
+    }
+
+    50% {
+        transform: rotate(4deg);
+    }
+}
+
+@keyframes ecobotLuz {
+    0%,
+    100% {
+        transform: translateX(-50%) scale(0.9);
+        opacity: 0.72;
+    }
+
+    50% {
+        transform: translateX(-50%) scale(1.08);
+        opacity: 1;
+    }
+}
+
+@keyframes ecobotSimbolo {
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+
+    50% {
+        transform: scale(1.07) rotate(3deg);
+    }
+}
+
+@keyframes ecobotEstado {
+    0%,
+    100% {
+        opacity: 0.55;
+        transform: scale(0.9);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+}
+
+@keyframes ecobotDestello {
+    0%,
+    100% {
+        opacity: 0.25;
+        transform: translateY(0) scale(0.8) rotate(0deg);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(-8px) scale(1.1) rotate(25deg);
+    }
+}
+.assistant-subtitle{
+    margin-top:8px;
+    color:#6b7280;
+    font-size:15px;
+    font-weight:500;
+}
+.ecobot-idle{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    color:#7b8b7b;
+
+    opacity:.75;
+
+}
+
+.ecobot-idle-icon{
+
+    font-size:70px;
+
+    animation:flotarBot 3s ease-in-out infinite;
+
+}
+
+.ecobot-idle h3{
+
+    margin-top:15px;
+
+    color:#1b5e20;
+
+}
+
+.ecobot-idle small{
+
+    max-width:220px;
+
+    line-height:1.5;
+
+}
+@keyframes flotarBot{
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+
+}
+/*=========================================
+  Animación de aparición de mensajes
+=========================================*/
+
+.chat-message{
+    animation: aparecerMensaje .35s ease;
+}
+
+@keyframes aparecerMensaje{
+
+    from{
+        opacity:0;
+        transform:translateY(12px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+/*=========================================
+    Animación de mensajes
+=========================================*/
+
+@keyframes aparecerMensaje{
+
+    from{
+        opacity:0;
+        transform:translateY(12px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
 }
