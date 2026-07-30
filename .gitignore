@@ -227,7 +227,7 @@ app/static/uploads/*
 dataset/
 
 # Modelos y resultados generados durante el entrenamiento
-model/training/*.keras
+# model/training/*.keras
 model/training/*.h5
 model/training/*.json
 model/training/*.png
