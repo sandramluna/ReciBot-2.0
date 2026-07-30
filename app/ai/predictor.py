@@ -7,26 +7,16 @@ from PIL import Image, UnidentifiedImageError
 
 
 # ==========================================================
-# RUTAS Y CONFIGURACIÓN
+# CONFIGURACIÓN
 # ==========================================================
 
 RAIZ_PROYECTO = Path(__file__).resolve().parents[2]
 
-MODELO_PATH = (
-    RAIZ_PROYECTO
-    / "model"
-    / "training"
-    / "modelo.keras"
-)
-
-LABELS_PATH = (
-    RAIZ_PROYECTO
-    / "model"
-    / "training"
-    / "labels.txt"
-)
+MODELO_PATH = RAIZ_PROYECTO / "model" / "training" / "modelo.keras"
+LABELS_PATH = RAIZ_PROYECTO / "model" / "training" / "labels.txt"
 
 IMAGE_SIZE = (224, 224)
+
 
 NOMBRES_ES = {
     "cardboard": "Cartón",
@@ -37,44 +27,27 @@ NOMBRES_ES = {
 }
 
 RECOMENDACIONES = {
-    "cardboard": (
-        "Retira cintas, grapas y restos de comida. "
-        "Deposita el cartón limpio y seco en el recipiente blanco."
-    ),
-    "glass": (
-        "Vacía y enjuaga el recipiente. "
-        "Deposítalo con cuidado en el recipiente blanco."
-    ),
-    "metal": (
-        "Limpia latas y envases metálicos antes de reciclarlos. "
-        "Deposítalos en el recipiente blanco."
-    ),
-    "organic": (
-        "Deposita este residuo en el recipiente verde. "
-        "Puede aprovecharse para producir compost."
-    ),
-    "plastic": (
-        "Vacía, limpia y seca el envase. "
-        "Deposítalo en el recipiente blanco cuando sea aprovechable."
-    ),
+    "cardboard": "Retira cintas y restos de comida. Deposítalo en el contenedor blanco.",
+    "glass": "Enjuaga el envase antes de reciclarlo. Deposítalo en el contenedor blanco.",
+    "metal": "Limpia el envase metálico y deposítalo en el contenedor blanco.",
+    "organic": "Deposita el residuo en el contenedor verde. Puede convertirse en compost.",
+    "plastic": "Vacía, limpia y seca el envase antes de reciclarlo.",
 }
-
-
-# ==========================================================
-# CARGA ÚNICA DEL MODELO
-# ==========================================================
 
 _modelo = None
 _etiquetas = None
-_bloqueo = Lock()
+_lock = Lock()
 
 
-def cargar_etiquetas() -> list[str]:
-    """Carga el orden de las clases usado durante el entrenamiento."""
+# ==========================================================
+# ETIQUETAS
+# ==========================================================
+
+def cargar_etiquetas():
 
     if not LABELS_PATH.exists():
         raise FileNotFoundError(
-            f"No se encontró el archivo de etiquetas:\n{LABELS_PATH}"
+            f"No existe:\n{LABELS_PATH}"
         )
 
     etiquetas = [
@@ -86,97 +59,77 @@ def cargar_etiquetas() -> list[str]:
     ]
 
     if not etiquetas:
-        raise ValueError(
-            "El archivo labels.txt está vacío."
+        raise RuntimeError(
+            "labels.txt está vacío."
         )
 
     return etiquetas
 
 
-def obtener_modelo() -> tf.keras.Model:
-    """
-    Carga el modelo y sus etiquetas una sola vez.
+# ==========================================================
+# MODELO
+# ==========================================================
 
-    La asignación se realiza únicamente después de que
-    ambos recursos hayan cargado correctamente.
-    """
+def obtener_modelo():
 
-    global _modelo, _etiquetas
+    global _modelo
+    global _etiquetas
 
-    if _modelo is None or _etiquetas is None:
-        with _bloqueo:
-            if _modelo is None or _etiquetas is None:
+    if _modelo is None:
+
+        with _lock:
+
+            if _modelo is None:
+
                 if not MODELO_PATH.exists():
                     raise FileNotFoundError(
-                        f"No se encontró el modelo:\n{MODELO_PATH}"
+                        f"No existe el modelo:\n{MODELO_PATH}"
                     )
 
-                print("Cargando modelo y etiquetas de ReciBot...")
+                print("Cargando modelo...")
 
-                # Cargar primero en variables temporales.
-                modelo_temporal = tf.keras.models.load_model(
+                _modelo = tf.keras.models.load_model(
                     MODELO_PATH
                 )
 
-                etiquetas_temporales = cargar_etiquetas()
+                _etiquetas = cargar_etiquetas()
 
-                cantidad_salidas = int(
-                    modelo_temporal.output_shape[-1]
-                )
-
-                if len(etiquetas_temporales) != cantidad_salidas:
-                    raise ValueError(
-                        "El número de etiquetas no coincide con "
-                        "las salidas del modelo. "
-                        f"Modelo: {cantidad_salidas}; "
-                        f"etiquetas: {len(etiquetas_temporales)}."
-                    )
-
-                # Asignar solamente cuando todo haya salido bien.
-                _modelo = modelo_temporal
-                _etiquetas = etiquetas_temporales
-
-                print(
-                    "Modelo de ReciBot cargado correctamente "
-                    f"con {len(_etiquetas)} categorías."
-                )
+                print("Modelo cargado correctamente.")
 
     return _modelo
 
 
 # ==========================================================
-# PROCESAMIENTO Y PREDICCIÓN
+# IMAGEN
 # ==========================================================
 
-def preparar_imagen(
-    ruta_imagen: str | Path,
-) -> np.ndarray:
-    """Convierte la imagen al formato esperado por el modelo."""
+def preparar_imagen(ruta):
 
-    ruta = Path(ruta_imagen)
+    ruta = Path(ruta)
 
     if not ruta.exists():
         raise FileNotFoundError(
-            f"No se encontró la imagen:\n{ruta}"
+            f"No existe la imagen:\n{ruta}"
         )
 
     try:
+
         with Image.open(ruta) as imagen:
+
             imagen = imagen.convert("RGB")
             imagen = imagen.resize(IMAGE_SIZE)
 
-            arreglo = np.asarray(
+            arreglo = np.array(
                 imagen,
                 dtype=np.float32,
             )
 
-    except UnidentifiedImageError as error:
-        raise ValueError(
-            "El archivo recibido no es una imagen válida."
-        ) from error
+    except UnidentifiedImageError:
 
-    # El modelo ya contiene preprocess_input,
-    # por lo que aquí no normalizamos manualmente.
+        raise ValueError(
+            "La imagen no es válida."
+        )
+
     arreglo = np.expand_dims(
         arreglo,
         axis=0,
@@ -185,20 +138,22 @@ def preparar_imagen(
     return arreglo
 
 
-def clasificar_imagen(
-    ruta_imagen: str | Path,
-) -> dict:
-    """
-    Clasifica una imagen y devuelve la categoría,
-    confianza y recomendación ambiental.
-    """
+# ==========================================================
+# PREDICCIÓN
+# ==========================================================
+
+def clasificar_imagen(ruta_imagen):
 
     modelo = obtener_modelo()
+
     if _etiquetas is None:
-    raise RuntimeError(
-        "Las etiquetas del modelo no fueron cargadas."
+        raise RuntimeError(
+            "Las etiquetas no fueron cargadas."
+        )
+
+    imagen = preparar_imagen(
+        ruta_imagen
     )
-    imagen = preparar_imagen(ruta_imagen)
 
     probabilidades = modelo.predict(
         imagen,
@@ -209,39 +164,50 @@ def clasificar_imagen(
         np.argmax(probabilidades)
     )
 
+    if indice >= len(_etiquetas):
+        raise RuntimeError(
+            "El modelo devolvió una clase inexistente."
+        )
+
+    etiqueta = _etiquetas[indice]
+
     confianza = float(
         probabilidades[indice]
     )
-if indice >= len(_etiquetas):
-    raise IndexError(
-        "El índice predicho está fuera del rango de etiquetas. "
-        f"Índice: {indice}; etiquetas: {len(_etiquetas)}."
-    )
-    etiqueta = _etiquetas[indice]
 
     return {
+
         "etiqueta": etiqueta,
+
         "categoria": NOMBRES_ES.get(
             etiqueta,
-            etiqueta.capitalize(),
+            etiqueta,
         ),
+
         "confianza": confianza,
+
         "confianza_porcentaje": round(
             confianza * 100,
             2,
         ),
+
         "recomendacion": RECOMENDACIONES.get(
             etiqueta,
-            "Consulta las normas locales para disponer correctamente este residuo.",
+            "",
         ),
+
         "probabilidades": {
+
             nombre: round(
-                float(probabilidad) * 100,
+                float(prob) * 100,
                 2,
             )
-            for nombre, probabilidad in zip(
+
+            for nombre, prob in zip(
                 _etiquetas,
                 probabilidades,
             )
+
         },
+
     }

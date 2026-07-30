@@ -539,30 +539,17 @@ if (modalCamara) {
     });
 }
 function mostrarInformacionAmbiental(categoria) {
-
-    const contenido = document.getElementById("contenidoAsistente");
-
-    if (!contenido) return;
-
     const info = BASE_CONOCIMIENTO[categoria];
 
     if (!info) {
-        contenido.innerHTML = `
-            <div class="bienvenida-asistente">
-                <h3>🤖 Asistente Ambiental ReciBot</h3>
-
-                <p>
-                    No encontré información para esta categoría.
-                </p>
-            </div>
-        `;
+        agregarMensajeBot(
+            "No encontré información ambiental para esta categoría."
+        );
         return;
     }
-window.mostrarInformacionAmbiental = mostrarInformacionAmbiental;
 
-    contenido.innerHTML = `
+    const tarjeta = `
         <div class="tarjeta-conocimiento">
-
             <h2>${categoria}</h2>
 
             <div class="item-conocimiento">
@@ -576,7 +563,7 @@ window.mostrarInformacionAmbiental = mostrarInformacionAmbiental;
             </div>
 
             <div class="item-conocimiento">
-                <h4>🌎 Curiosidad</h4>
+                <h4>🌍 Curiosidad</h4>
                 <p>${info.curiosidad}</p>
             </div>
 
@@ -585,11 +572,11 @@ window.mostrarInformacionAmbiental = mostrarInformacionAmbiental;
                 <p>${info.beneficio}</p>
             </div>
 
-            <div class="mensaje-final">
-                ${info.mensaje}
-            </div>
-
+            <p class="mensaje-impacto">
+                🌱 ${info.mensaje}
+            </p>
         </div>
     `;
 
+    agregarMensajeBot(tarjeta);
 }
