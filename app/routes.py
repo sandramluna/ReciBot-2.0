@@ -54,9 +54,10 @@ def inicio():
         )
 
     if "imagen_residuo" not in request.files:
-        flash(
-            "No se recibió ningún archivo.",
-            "error",
+        current_app.logger.warning(
+            "Se recibió una petición POST sin archivo. "
+            "Tipo de contenido: %s",
+            request.content_type,
         )
 
         return redirect(
@@ -65,7 +66,6 @@ def inicio():
                 _anchor="clasificador",
             )
         )
-
     archivo = request.files["imagen_residuo"]
 
     if archivo.filename == "":
