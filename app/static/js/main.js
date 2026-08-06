@@ -51,36 +51,76 @@ const canvasCamara = document.getElementById("canvas-camara");
 
 let flujoCamara = null;
 let formularioEnviado = false;
-const pestanasCentro = document.querySelectorAll(".pestana-centro");
-const panelesCentro = document.querySelectorAll(".panel-centro");
+const pestanasCentro =
+    document.querySelectorAll(".pestana-centro");
 
-pestanasCentro.forEach((pestana) => {
-    pestana.addEventListener("click", () => {
-        const nombrePestana = pestana.dataset.pestana;
+const panelesCentro =
+    document.querySelectorAll(".panel-centro");
 
-        pestanasCentro.forEach((elemento) => {
-            elemento.classList.remove("activa");
-            elemento.setAttribute("aria-selected", "false");
-        });
+function activarPestanaCentro(nombrePestana) {
+    pestanasCentro.forEach((pestana) => {
+        const estaActiva =
+            pestana.dataset.pestana === nombrePestana;
 
-        panelesCentro.forEach((panel) => {
-            panel.classList.remove("activo");
-            panel.hidden = true;
-        });
-
-        pestana.classList.add("activa");
-        pestana.setAttribute("aria-selected", "true");
-
-        const panelActivo = document.querySelector(
-            `[data-panel="${nombrePestana}"]`
+        pestana.classList.toggle(
+            "activa",
+            estaActiva
         );
 
-        if (panelActivo) {
-            panelActivo.hidden = false;
-            panelActivo.classList.add("activo");
-        }
+        pestana.setAttribute(
+            "aria-selected",
+            String(estaActiva)
+        );
     });
+
+    panelesCentro.forEach((panel) => {
+        const estaActivo =
+            panel.dataset.panel === nombrePestana;
+
+        /*
+         * Control directo de visibilidad.
+         * Solo el panel seleccionado se muestra.
+         */
+        panel.style.display =
+            estaActivo
+                ? "block"
+                : "none";
+
+        panel.hidden = !estaActivo;
+
+        panel.classList.toggle(
+            "activo",
+            estaActivo
+        );
+    });
+}
+
+pestanasCentro.forEach((pestana) => {
+
+    pestana.addEventListener("click", () => {
+
+        activarPestanaCentro(
+            pestana.dataset.pestana
+        );
+
+    });
+
 });
+
+/* Panel inicial */
+const pestanaInicial =
+    document.querySelector(
+        ".pestana-centro.activa"
+    ) || pestanasCentro[0];
+
+if (pestanaInicial) {
+
+    activarPestanaCentro(
+        pestanaInicial.dataset.pestana
+    );
+
+}
+
 if (inputImagen) {
     inputImagen.addEventListener("change", () => {
         procesarArchivo(inputImagen.files[0]);

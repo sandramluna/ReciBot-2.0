@@ -3,12 +3,72 @@
 // Motor conversacional local
 // =====================================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    inicializarEcoChat();
+        restaurarMemoriaConversacion();
 
-});
+        inicializarEcoChat();
 
+    }
+);
+const memoriaConversacion = {
+
+    ultimaCategoria: null,
+
+    ultimoTema: null,
+
+    ultimoObjeto: null
+
+};
+function restaurarMemoriaConversacion() {
+
+    memoriaConversacion.ultimaCategoria =
+        sessionStorage.getItem("ultimaCategoria");
+
+    memoriaConversacion.ultimoTema =
+        sessionStorage.getItem("ultimoTema");
+
+    memoriaConversacion.ultimoObjeto =
+        sessionStorage.getItem("ultimoObjeto");
+
+}
+function detectarTemaConversacion(texto) {
+
+    if (
+        texto.includes("beneficio") ||
+        texto.includes("beneficios")
+    ) {
+        return "beneficio";
+    }
+
+    if (
+        texto.includes("contenedor") ||
+        texto.includes("caneca") ||
+        texto.includes("depositar")
+    ) {
+        return "contenedor";
+    }
+
+    if (
+        texto.includes("consejo") ||
+        texto.includes("reciclar") ||
+        texto.includes("reciclo") ||
+        texto.includes("reutilizar")
+    ) {
+        return "consejo";
+    }
+
+    if (
+        texto.includes("curiosidad") ||
+        texto.includes("dato curioso")
+    ) {
+        return "curiosidad";
+    }
+
+    return null;
+}
 function inicializarEcoChat() {
 
     const boton = document.getElementById("btnEnviarPregunta");
@@ -133,32 +193,72 @@ function escribirTextoProgresivo(elemento, texto, chat) {
     escribirCaracter();
 }
 function mostrarTyping() {
-    const chat = document.getElementById("chatMensajes");
 
-    if (!chat) return;
+    const chat =
+        document.getElementById("chatMensajes");
 
-    chat.insertAdjacentHTML(
-        "beforeend",
-        `
-        <div class="chat-message bot" id="typingMessage">
-            <div class="chat-avatar">🤖</div>
+    if (!chat) {
+        return;
+    }
 
-            <div class="chat-bubble">
-                <div class="typing-indicator">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
+    const typingExistente =
+        document.getElementById("ecobotTyping");
+
+    if (typingExistente) {
+        return;
+    }
+
+    const mensaje =
+        document.createElement("div");
+
+    mensaje.className =
+        "chat-message bot";
+
+    mensaje.id =
+        "ecobotTyping";
+
+    const avatar =
+        document.createElement("div");
+
+    avatar.className =
+        "chat-avatar";
+
+    avatar.innerHTML = `
+        <div class="ecobot-mini">
+            <div class="ecobot-mini-head">
+                <span class="mini-eye"></span>
+                <span class="mini-eye"></span>
             </div>
         </div>
-        `
-    );
+    `;
 
-    chat.scrollTop = chat.scrollHeight;
+    const burbuja =
+        document.createElement("div");
+
+    burbuja.className =
+        "chat-bubble typing-bubble";
+
+    burbuja.innerHTML = `
+        <span>EcoBot está pensando</span>
+
+        <span class="typing-puntos">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+    `;
+
+    mensaje.appendChild(avatar);
+    mensaje.appendChild(burbuja);
+
+    chat.appendChild(mensaje);
+
+    chat.scrollTop =
+        chat.scrollHeight;
 }
 function ocultarTyping(){
 
-    const typing = document.getElementById("typingMessage");
+    const typing = document.getElementById("ecobotTyping");
 
     if(typing){
 
@@ -167,10 +267,86 @@ function ocultarTyping(){
     }
 
 }
+function obtenerUltimaCategoria() {
+
+    return (
+        memoriaConversacion.ultimaCategoria ||
+        sessionStorage.getItem(
+            "ultimaCategoria"
+        )
+    );
+
+}
 function interpretarPregunta(pregunta){
+   
+   const texto = pregunta
+        .toLowerCase()
+        .trim();
+    const objetoActual =
+    memoriaConversacion.ultimoObjeto ||
+    sessionStorage.getItem("ultimoObjeto");
 
-    const texto = pregunta.toLowerCase();
+const categoriaActual =
+    memoriaConversacion.ultimaCategoria ||
+    sessionStorage.getItem("ultimaCategoria");
+if (
+    texto.includes("degradarse") ||
+    texto.includes("degradación") ||
+    texto.includes("degradacion") ||
+    texto.includes("cuánto tarda") ||
+    texto.includes("cuanto tarda") ||
+    texto.includes("cuánto demora") ||
+    texto.includes("cuanto demora")
+) {
 
+    const respuestaDegradacion =
+        obtenerRespuestaDegradacion(
+            objetoActual,
+            categoriaActual
+        );
+
+    if (respuestaDegradacion) {
+        memoriaConversacion.ultimoTema =
+            "degradacion";
+
+        return respuestaDegradacion;
+    }
+}
+
+   const temaDetectado =
+    detectarTemaConversacion(texto);
+
+if (temaDetectado) {
+    memoriaConversacion.ultimoTema =
+        temaDetectado;
+}
+
+    if (
+        texto.includes("contenedor verde") ||
+        texto.includes("qué va en el contenedor verde") ||
+        texto.includes("que va en el contenedor verde")
+    ) {
+        return `
+            <div class="eco-card">
+                <h4>🟢 Contenedor verde</h4>
+
+                <div class="eco-divider"></div>
+
+                <div class="eco-card-section">
+                    Aquí se depositan residuos orgánicos
+                    aprovechables, como cáscaras, restos de
+                    frutas, verduras y residuos de jardinería.
+                </div>
+            </div>
+        `;
+    }
+
+    if (
+        texto.includes("consejo ambiental") ||
+        texto.includes("dame un consejo ambiental")
+    ) {
+        return obtenerConsejoAmbiental();
+    }
     // Saludos
     if (
         texto.includes("hola") ||
@@ -241,19 +417,96 @@ Puedo ayudarte a:
         return "♻️ Puedo responder preguntas sobre reciclaje, residuos y medio ambiente.";
 
     }
+    // Resumen personalizado del historial
+if (
+    texto.includes("mi historial") ||
+    texto.includes("mis clasificaciones") ||
+    texto.includes("resumen") ||
+    texto.includes("cómo va el modelo") ||
+    texto.includes("como va el modelo") ||
+    texto.includes("estado del modelo") ||
+    texto.includes("analiza mis datos")
+) {
+    const generarResumen =
+        window.HistoryRecibot
+            ?.generarResumenInteligente;
+
+    if (typeof generarResumen === "function") {
+        const resumen = generarResumen();
+
+        return `
+            <div class="eco-card">
+                <h4>🧠 Resumen de tus clasificaciones</h4>
+
+                <div class="eco-divider"></div>
+
+                <div class="eco-card-section">
+                    ${resumen
+                        .split("\n\n")
+                        .filter(Boolean)
+                        .map(
+                            parrafo => `<p>${parrafo}</p>`
+                        )
+                        .join("")}
+                </div>
+            </div>
+        `;
+    }
+
+    return "No pude consultar el historial en este momento.";
+}
+// Contenedor verde
+if (
+    texto.includes("contenedor verde") ||
+    texto.includes("qué va en el contenedor verde") ||
+    texto.includes("que va en el contenedor verde")
+) {
+
+    return `
+
+<div class="eco-card">
+
+    <h4>🟢 Contenedor Verde</h4>
+
+    <div class="eco-divider"></div>
+
+    <div class="eco-card-section">
+
+        Aquí se depositan principalmente:
+
+        <br><br>
+
+        🍌 Restos de frutas.
+
+        <br>
+
+        🥬 Verduras.
+
+        <br>
+
+        ☕ Residuos de café.
+
+        <br>
+
+        🍃 Hojas y residuos de jardinería.
+
+        <br><br>
+
+        ♻️ Estos residuos pueden convertirse en compost.
+
+    </div>
+
+</div>
+
+`;
+
+}
 let categoria = buscarCategoria(texto);
 
 if(!categoria){
 
-    categoria = buscarObjeto(texto);
+    categoria = buscarObjeto(texto);  
     
-    function obtenerUltimaCategoria(){
-
-    return sessionStorage.getItem(
-        "ultimaCategoria"
-    );
-
-}
 
 }
 
@@ -262,6 +515,54 @@ if(categoria){
     const info = obtenerInformacionCategoria(categoria);
 
     if(info){
+        memoriaConversacion.ultimaCategoria =
+    categoria;
+
+    memoriaConversacion.ultimoTema =
+        null; 
+
+    const objetoDetectado =
+    detectarObjetoMencionado(texto);
+
+if (objetoDetectado) {
+    memoriaConversacion.ultimoObjeto =
+        objetoDetectado;
+}
+sessionStorage.setItem(
+    "ultimoObjeto",
+    objetoDetectado
+);
+
+
+sessionStorage.setItem(
+    "ultimaCategoria",
+    categoria
+);
+
+sessionStorage.setItem(
+    "ultimoTema",
+    memoriaConversacion.ultimoTema
+);
+const temaActual =
+    temaDetectado ||
+    memoriaConversacion.ultimoTema;
+
+if (temaActual === "beneficio") {
+    return "🌱 " + info.beneficio;
+}
+
+if (temaActual === "contenedor") {
+    return "🗑️ Debe ir al contenedor " +
+        info.contenedor;
+}
+
+if (temaActual === "consejo") {
+    return "💡 " + info.consejo;
+}
+
+if (temaActual === "curiosidad") {
+    return "📚 " + info.curiosidad;
+}
 
       return `
 
@@ -378,6 +679,119 @@ if(ultimaCategoria){
     return "🤔 Aún no conozco esa respuesta. Intenta preguntarme sobre reciclaje o residuos.";
 
 }
+function obtenerConsejoAmbiental(){
+
+    const consejos = [
+
+        "💧 Cierra la llave mientras te cepillas los dientes.",
+
+        "🌳 Planta un árbol o cuida uno cercano.",
+
+        "♻️ Separa correctamente tus residuos.",
+
+        "🛍️ Usa bolsas reutilizables.",
+
+        "🚲 Siempre que puedas utiliza bicicleta o camina.",
+
+        "🔌 Desconecta los cargadores cuando no los uses.",
+
+        "💡 Aprovecha la luz natural durante el día.",
+
+        "🥤 Evita los plásticos de un solo uso."
+
+    ];
+
+    return consejos[
+        Math.floor(
+            Math.random() * consejos.length
+        )
+    ];
+
+}
+function obtenerRespuestaDegradacion(objeto, categoria) {
+
+    const tiempos = {
+        botella: {
+            categoria: "Plástico",
+            respuesta:
+                "🕒 Una botella de plástico puede tardar más de 400 años en degradarse."
+        },
+
+        bolsa: {
+            categoria: "Plástico",
+            respuesta:
+                "🕒 Una bolsa plástica puede tardar entre 10 y 150 años en degradarse."
+        },
+
+        lata: {
+            categoria: "Metal",
+            respuesta:
+                "🕒 Una lata metálica puede tardar aproximadamente 200 años en degradarse."
+        },
+
+        periódico: {
+            categoria: "Cartón",
+            respuesta:
+                "🕒 Un periódico puede degradarse en varias semanas si permanece en condiciones naturales adecuadas."
+        },
+
+        papel: {
+            categoria: "Cartón",
+            respuesta:
+                "🕒 El papel puede tardar entre 2 y 5 meses en degradarse."
+        },
+
+        caja: {
+            categoria: "Cartón",
+            respuesta:
+                "🕒 Una caja de cartón puede degradarse en pocos meses si está limpia y expuesta a condiciones naturales."
+        },
+
+        frasco: {
+            categoria: "Vidrio",
+            respuesta:
+                "🕒 Un frasco de vidrio puede tardar miles de años en degradarse."
+        },
+
+        vaso: {
+            categoria: categoria,
+            respuesta:
+                `🕒 El tiempo de degradación de un vaso depende del material del que esté fabricado.`
+        },
+
+        envase: {
+            categoria: categoria,
+            respuesta:
+                `🕒 El tiempo de degradación de un envase depende de su material: plástico, vidrio, metal o cartón.`
+        }
+    };
+
+    if (objeto && tiempos[objeto]) {
+        return tiempos[objeto].respuesta;
+    }
+
+    if (categoria === "Plástico") {
+        return "🕒 Los residuos plásticos pueden tardar desde varias décadas hasta cientos de años en degradarse.";
+    }
+
+    if (categoria === "Metal") {
+        return "🕒 Los residuos metálicos pueden tardar décadas o incluso siglos en degradarse.";
+    }
+
+    if (categoria === "Vidrio") {
+        return "🕒 El vidrio puede permanecer en el ambiente durante miles de años.";
+    }
+
+    if (categoria === "Cartón") {
+        return "🕒 El cartón suele degradarse en algunos meses si permanece limpio y en condiciones naturales.";
+    }
+
+    if (categoria === "Orgánico") {
+        return "🕒 Los residuos orgánicos pueden degradarse en días o meses, según el tipo de residuo y las condiciones ambientales.";
+    }
+
+    return null;
+}
 function buscarCategoria(texto){
 
     texto = texto.toLowerCase();
@@ -399,6 +813,40 @@ function buscarCategoria(texto){
 
     return null;
 
+}
+function detectarObjetoMencionado(texto) {
+    const objetos = [
+        "botella",
+        "lata",
+        "periódico",
+        "periodico",
+        "caja",
+        "frasco",
+        "vaso",
+        "bolsa",
+        "papel",
+        "envase",
+        "cartón",
+        "carton"
+    ];
+
+    const objetoEncontrado = objetos.find(
+        (objeto) => texto.includes(objeto)
+    );
+
+    if (!objetoEncontrado) {
+        return null;
+    }
+
+    const nombresNormalizados = {
+        periodico: "periódico",
+        carton: "cartón"
+    };
+
+    return (
+        nombresNormalizados[objetoEncontrado] ||
+        objetoEncontrado
+    );
 }
 function buscarObjeto(texto){
 
@@ -447,12 +895,16 @@ function buscarObjeto(texto){
     return null;
 
 }
-function preguntaRapida(texto){
+function preguntaRapida(texto) {
+    const input = document.getElementById(
+        "preguntaUsuario"
+    );
 
-    const input = document.getElementById("preguntaUsuario");
+    if (!input) {
+        return;
+    }
 
     input.value = texto;
-
-    document.getElementById("btnEnviarPregunta").click();
-
+    enviarPregunta();
 }
+window.preguntaRapida = preguntaRapida;

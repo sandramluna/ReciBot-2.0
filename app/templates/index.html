@@ -42,7 +42,7 @@
             <ul class="menu-principal" id="menu-principal">
     <li><a href="#inicio">Inicio</a></li>
     <li><a href="#funcionamiento">Cómo funciona</a></li>
-    <li><a href="#beneficios">Beneficios</a></li>
+    <li><a href="#beneficios">Impacto</a></li>
     <li><a href="#proyecto">Proyecto</a></li>
     <li><a href="#centro-inteligencia">
     Centro de Inteligencia
@@ -221,7 +221,7 @@
         <section class="seccion seccion-verde" id="clasificador">
             <div class="contenedor-ancho clasificador-presentacion">
                 <div>
-                    <span class="etiqueta etiqueta-clara">Próximo módulo</span>
+                    
 
                     <h2>Clasificador inteligente de residuos</h2>
 
@@ -700,9 +700,7 @@
 <section class="seccion centro-inteligencia" id="centro-inteligencia">
     <div class="contenedor-ancho">
         <div class="encabezado-seccion">
-            <span class="etiqueta-seccion">
-                Nuevo módulo
-            </span>
+            
 
             <h2>Centro de Inteligencia ReciBot</h2>
 
@@ -747,35 +745,147 @@
             </button>
         </div>
 
-        <div class="paneles-centro">
-           <div
-    id="contenedor-historial"
-    class="contenedor-historial"
->
-
+<div class="paneles-centro">
+            
     <div
-        id="estado-vacio-historial"
-        class="estado-vacio"
+         class="panel-centro"
+         id="panel-historial"
+         data-panel="historial"
+         role="tabpanel"
     >
+    <div class="historial-toolbar">
 
-        <span class="estado-vacio-icono">
-            📋
+    <div class="historial-toolbar-encabezado">
+        <div>
+            <h3>Historial de Clasificaciones</h3>
+
+            <p>
+                Consulta, busca y organiza los residuos analizados.
+            </p>
+        </div>
+
+        <span
+            id="total-historial"
+            class="historial-total"
+        >
+            0 registros
         </span>
+    </div>
 
-        <h3>
-            Aún no hay clasificaciones guardadas
-        </h3>
+    <div class="historial-controles">
 
-        <p>
-            Cuando analices residuos,
-            aparecerán aquí con su fecha,
-            categoría,
-            confianza y contenedor recomendado.
-        </p>
+        <label class="campo-historial">
+            <span>Buscar</span>
+
+            <div class="campo-historial-entrada">
+                <span aria-hidden="true">🔍</span>
+
+                <input
+                    id="buscar-historial"
+                    type="search"
+                    placeholder="Buscar por categoría..."
+                    autocomplete="off"
+                >
+            </div>
+        </label>
+
+        <label class="campo-historial">
+            <span>Ordenar</span>
+
+            <select id="ordenar-historial">
+                <option value="recientes">
+                    Más recientes
+                </option>
+
+                <option value="antiguos">
+                    Más antiguos
+                </option>
+
+                <option value="mayor-confianza">
+                    Mayor confianza
+                </option>
+
+                <option value="menor-confianza">
+                    Menor confianza
+                </option>
+            </select>
+        </label>
+
+        <label class="campo-historial">
+            <span>Filtrar</span>
+
+            <select id="filtrar-historial">
+                <option value="todas">
+                    Todas las categorías
+                </option>
+
+                <option value="Cartón">
+                    Cartón
+                </option>
+
+                <option value="Plástico">
+                    Plástico
+                </option>
+
+                <option value="Vidrio">
+                    Vidrio
+                </option>
+
+                <option value="Metal">
+                    Metal
+                </option>
+
+                <option value="Orgánico">
+                    Orgánico
+                </option>
+            </select>
+        </label>
 
     </div>
 
 </div>
+        <div
+             id="contenedor-historial"
+             class="contenedor-historial"
+        >
+    
+
+    <div
+        id="estado-vacio-historial"
+        class="estado-vacio"
+    > 
+
+            <span class="estado-vacio-icono">
+                 📋
+            </span>
+
+            <h3>
+                 Aún no hay clasificaciones guardadas
+            </h3>
+
+            <p>
+                 Cuando analices residuos,
+                 aparecerán aquí con su fecha,
+                 categoría,
+                 confianza y contenedor recomendado.
+            </p>
+        </div>
+    </div>
+<div
+    id="acciones-historial"
+    class="acciones-historial"
+    hidden
+>
+    <button
+    id="btn-ver-mas"
+    class="boton boton-secundario"
+>
+    Ver más
+</button>
+</div>
+
+</div>
+
                 
 
             <div
@@ -785,7 +895,8 @@
                 role="tabpanel"
                 hidden
             >
-                <div class="estado-vacio">
+           
+            <div class="estado-vacio">
                     <span class="estado-vacio-icono">📊</span>
                     <h3>Las estadísticas estarán disponibles próximamente</h3>
                     <p>
@@ -793,6 +904,7 @@
                         y el promedio de confianza del modelo.
                     </p>
                 </div>
+
             </div>
 
             <div
@@ -865,21 +977,44 @@ Puedo ayudarte a:<br><br>
     </div>
 <div class="quick-actions">
 
-    <button class="quick-btn" onclick="preguntaRapida('¿Cómo reciclar plástico?')">
-        ♻️ ¿Cómo reciclar plástico?
-    </button>
+    <button
+    class="quick-btn"
+    type="button"
+    onclick="preguntaRapida('¿Cómo reciclar plástico?')"
+>
+    ♻️ ¿Cómo reciclar plástico?
+</button>
 
-    <button class="quick-btn" onclick="preguntaRapida('¿Qué va en el contenedor verde?')">
-        🗑️ Contenedor verde
-    </button>
+<button
+    class="quick-btn"
+    type="button"
+    onclick="preguntaRapida('¿Qué va en el contenedor verde?')"
+>
+    🗑️ Contenedor verde
+</button>
 
-    <button class="quick-btn" onclick="preguntaRapida('Dame un consejo ambiental')">
-        🌎 Consejo ambiental
-    </button>
+<button
+    class="quick-btn"
+    type="button"
+    onclick="preguntaRapida('Dame un consejo ambiental')"
+>
+    🌎 Consejo ambiental
+</button>
 
-    <button class="quick-btn" onclick="preguntaRapida('¿Cómo clasifico una imagen?')">
-        📷 Clasificar imagen
-    </button>
+    <button
+    class="quick-btn"
+    type="button"
+    onclick="
+        document
+            .getElementById('clasificador')
+            ?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+    "
+>
+    📷 Clasificar imagen
+</button>
 
 </div>
     <div class="chat-input">
